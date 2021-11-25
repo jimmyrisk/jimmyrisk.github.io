@@ -12,7 +12,7 @@ main:
  - title: "Student Theses"
     url: /student-theses/
         
-  - title: "Github"
+  - title: "github Projects"
     url: /github/
     
   - title: "CV"
