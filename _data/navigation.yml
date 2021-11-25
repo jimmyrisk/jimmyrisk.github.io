@@ -9,11 +9,11 @@ main:
   - title: "Teaching"
     url: /teaching/    
     
-#  - title: "Portfolio"
-#    url: /portfolio/
+ - title: "Student Theses"
+    url: /student-theses/
         
-#  - title: "Blog Posts"
-#    url: /year-archive/
+  - title: "Github"
+    url: /github/
     
   - title: "CV"
     url: /cv/
