@@ -5,7 +5,7 @@ permalink: /github/
 author_profile: true
 ---
 
-Main link: [github.com/jimmyrisk/](https://github.com/jimmyrisk/)
+[github.com/jimmyrisk/](https://github.com/jimmyrisk/)
 
 {% include base_path %}
 
