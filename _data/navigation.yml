@@ -9,7 +9,7 @@ main:
   - title: "Teaching"
     url: /teaching/    
     
- - title: "Student Theses"
+  - title: "Student Theses"
     url: /student-theses/
         
   - title: "github Projects"
