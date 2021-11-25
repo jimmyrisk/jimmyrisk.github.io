@@ -7,7 +7,6 @@ redirect_from:
   - /resume
 ---
 
-{% include base_path %}
 
 <object data="https://jimmyrisk.github.io/_pages/cv.pdf" type="application/pdf" width="700px" height="700px">
     <embed src="https://jimmyrisk.github.io/_pages/cv.pdf">
