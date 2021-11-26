@@ -11,7 +11,7 @@ author_profile: true
 
 {% include base_path %}
 
-# Research Interests
+## Research Interests
 
 My research primarily focuses on **Gaussian processes** (GPs), a Bayesian non-parametric based modelling method.  I have used GPs as a tool in a variety of disciplines including
 
@@ -23,7 +23,7 @@ Gaussian processes are a kernel based method (the same kernel used in e.g.~suppo
 
 I acknowledge state of the art problems and methodology, and value a probabilistic and statistical approach to make advanced tasks more transparent, interpretable, and robust.
 
-# Publications
+## Publications
 
 * Risk, Jimmy, Huynh, Nhan, and Ludkovski, Michael.  **SOA 2021 ILEC mortality prediction contest.**  *Society of Actuaries* (2021). [www.soa.org/globalassets/assets/files/resources/research-report/2021/mort-prediction-contest.pdf](https://www.soa.org/globalassets/assets/files/resources/research-report/2021/mort-prediction-contest.pdf)
 * Risk, Jimmy, and Ludkovski, Michael. **Sequential Design and Spatial Modeling for Portfolio Tail Risk Measurement.** *SIAM Journal on Financial Mathematics 9.4* (2018) 1137-1174. *([arxiv link](https://arxiv.org/pdf/1710.05204.pdf))*
@@ -33,7 +33,7 @@ I acknowledge state of the art problems and methodology, and value a probabilist
 * Risk, Jimmy.  **Correlations between Google search data and Mortality Rates.** arXiv preprint arXiv:1209.2433 (2012).  [https://arxiv.org/abs/1209.2433](arxiv.org/abs/1209.2433)
 
 
-# Working Papers
+## Working Papers
 
 * Risk, Jimmy, Amelin, Charles, and Frank, Hakeem.  **Interpretable Kernels for Gaussian Process Super-Resolution.** *(Preprint available upon request)*
 * Risk, Jimmy, and Ronald Lencevicius.  **Gaussian Process Specific Comparisons between Neural Tangent and Laplace Kernels.**
