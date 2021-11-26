@@ -33,3 +33,7 @@ I acknowledge state of the art problems and methodology, and value a probabilist
 
 
 # Working Papers
+
+* Risk, Jimmy, Amelin, Charles, and Frank, Hakeem.  **Interpretable Kernels for Gaussian Process Super-Resolution.** *(Preprint available upon request)*
+* Risk, Jimmy, and Ronald Len\v{c}evicius.  **Gaussian Process Specific Comparisons between Neural Tangent and Laplace Kernels.**
+* Risk, Jimmy, and Ludkovski, Michael.  **Flexible Kernels for Multi-Population Gaussian Process Mortality Models.**
