@@ -61,7 +61,7 @@ From Fall 2020 to Spring 2021, I am coordinator for STA 1200 (one of the largest
 * [STA 5320 (Graduate) Linear Statistical Models](https://catalog.cpp.edu/content.php?catoid=36&catoid=36&navoid=2930&filter%5Bitem_type%5D=3&filter%5Bonly_active%5D=1&filter%5B3%5D=1&filter%5Bcpage%5D=42#) (S19)
 * [STA 5650 (Graduate) Multivariate Analysis](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=165658) (F20)
 * [STA 5900 (Graduate) Statistical Consulting](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=161429) (S21)
-* [MAT 5990 (Graduate) Introduction to Measure Theory)[syllabus5990Su19.pdf] (Su19)
+* [MAT 5990 (Graduate) Introduction to Measure Theory](syllabus5990Su19.pdf) (Su19)
 
 # Prior (Student) Teaching Experience
 
