@@ -17,8 +17,8 @@ Below are a full list of talks I have given, with slides and/or documents if app
 * [Gaussian Process Models for Mortality Rates and Improvement Factors: An Interactive R Markdown Approach](102618.pdf). **AMS Sectional Meeting; Special Session on Markov Processes, Gaussian Processes and Applications in San Francisco, CA**.  *October 2018*.
 * [An Interactive R Markdown Approach to Mortality Rate and Improvement Modeling using Gaussian Process Models]().  **Fourteenth International Longevity Risk and Capital Markets Solutions Conference in Amsterdam**. *September 2018*. 
 * [Gaussian Process Models for Mortality Rates and Improvement Factors](Longevity12-092216.pdf).  **Twelfth International Longevity Risk and Capital Markets Solutions Conference in Chicago**. *September 2016*.
-* [Statistical Emulators \& Longevity Risk](JamesRiskLongevity11.pdf). **Actuarial Research Conference (ARC), University of Toronto**. *August 2015*.
-* [Statistical Emulators \& Longevity Risk](JamesRiskLongevity11.pdf). **Eleventh International Longevity Risk and Capital Markets Solutions Conference at Universite Lyon 1, Lyon, France**. *September 2015*.
+* [Statistical Emulators & Longevity Risk](JamesRiskLongevity11.pdf). **Actuarial Research Conference (ARC), University of Toronto**. *August 2015*.
+* [Statistical Emulators & Longevity Risk](JamesRiskLongevity11.pdf). **Eleventh International Longevity Risk and Capital Markets Solutions Conference at Universite Lyon 1, Lyon, France**. *September 2015*.
 
 ## Seminar Talks
 
