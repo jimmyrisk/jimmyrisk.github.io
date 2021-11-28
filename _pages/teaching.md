@@ -17,6 +17,10 @@ I believe this comes from my extensive experience in one-on-one tutoring (with s
 * HyFlex Training (Summer 21)
 * [Cal Poly Pomona Safe Zone Ally Training](https://www.cpp.edu/~oslcc/pride/programs-events/safe-zone.shtml) (Fall 19)
 
+
+
+
+
 # Cal Poly Pomona (Assistant Professor)
 
 ## STA 1200 Course Coordinator
@@ -63,7 +67,9 @@ From Fall 2020 to Spring 2021, I am coordinator for STA 1200 (one of the largest
 * [STA 5900 (Graduate) Statistical Consulting](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=161429) (S21)
 * [MAT 5990 (Graduate) Introduction to Measure Theory](syllabus5990Su19.pdf) (Su19)
 
-# Prior (Student) Teaching Experience
+
+
+# Student Teaching Experience
 
 Below, *Teaching Associate* refers to a student position where I have full class responsibility.  *Teaching Assistant* refers to responsibility to teach a recitation section of a course, where the full lecture is taught by a full time faculty member.
 
