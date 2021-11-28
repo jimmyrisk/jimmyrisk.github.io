@@ -74,24 +74,23 @@ Below, *Teaching Associate* refers to a student position where I have full class
   * [PSTAT 109 Statistics for Economics](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (Su15, Su16)
 
 * Teaching Assistant
-
-* [PSTAT 160A (Introduction to Stochastic Processes)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (F15)
-* [PSTAT 171 (Mathematics of Interest)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (F13, F14)
-* [PSTAT 172A (Actuarial Statistics I)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (W14, W15, W16)
-* [PSTAT 172B (Actuarial Statistics II)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (S14, S15, S16)
-* [PSTAT 182T (Tutorial for Actuarial Exams P and FM)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (W14, S14)
-* [PSTAT 213A Introduction To Probability Theory And Stochastic Processes (PhD Level)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (F15, F16)
-* [PSTAT 213B Introduction To Probability Theory And Stochastic Processes (PhD Level)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (W16, W17)
-* [PSTAT 213C Introduction To Probability Theory And Stochastic Processes (PhD Level)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (S16, S17)
-* [PSTAT 501 Teaching Assistant Training](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (F16, W16)
+  * [PSTAT 160A (Introduction to Stochastic Processes)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (F15)
+  * [PSTAT 171 (Mathematics of Interest)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (F13, F14)
+  * [PSTAT 172A (Actuarial Statistics I)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (W14, W15, W16)
+  * [PSTAT 172B (Actuarial Statistics II)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (S14, S15, S16)
+  * [PSTAT 182T (Tutorial for Actuarial Exams P and FM)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (W14, S14)
+  * [PSTAT 213A Introduction To Probability Theory And Stochastic Processes (PhD Level)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (F15, F16)
+  * [PSTAT 213B Introduction To Probability Theory And Stochastic Processes (PhD Level)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (W16, W17)
+  * [PSTAT 213C Introduction To Probability Theory And Stochastic Processes (PhD Level)](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (S16, S17)
+  * [PSTAT 501 Teaching Assistant Training](https://my.sa.ucsb.edu/catalog/Current/CollegesDepartments/ls-intro/stats.aspx?DeptTab=Courses) (F16, W16)
 
 ## Michigan State University Department of Statistics and Probability
 
 * Teaching Associate (Summer 2012)
-  * (STT 315 Introduction to Probability and Statistics for Business)[https://reg.msu.edu/Courses/Request.aspx?SubjectCode=STT&CourseNumber=315#Results]
+  * [STT 315 Introduction to Probability and Statistics for Business](https://reg.msu.edu/Courses/Request.aspx?SubjectCode=STT&CourseNumber=315#Results)
 
 * Teaching Assistant (Jan 2012-June 2013)
-  * (STT 315 Introduction to Probability and Statistics for Business)[https://reg.msu.edu/Courses/Request.aspx?SubjectCode=STT&CourseNumber=315#Results]
-  * (STT 455 Actuarial Models I)[https://reg.msu.edu/Courses/Search.aspx?CourseID=355391#Results]
-  * (STT 456 Actuarial Models II)[https://reg.msu.edu/Courses/Search.aspx?CourseID=355392#Results]
+  * [STT 315 Introduction to Probability and Statistics for Business](https://reg.msu.edu/Courses/Request.aspx?SubjectCode=STT&CourseNumber=315#Results)
+  * [STT 455 Actuarial Models I](https://reg.msu.edu/Courses/Search.aspx?CourseID=355391#Results)
+  * [STT 456 Actuarial Models II](https://reg.msu.edu/Courses/Search.aspx?CourseID=355392#Results)
 
