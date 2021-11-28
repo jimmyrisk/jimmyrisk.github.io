@@ -26,4 +26,4 @@ Below are a full list of talks I have given, with slides and/or documents if app
 * [Gaussian Processes for Machine Learning](talk.pdf). **CPP Mathematics and Statistics Colloquium**. *March 2017*.
 * [Stochastic Kriging in Quantile Estimation with Applications to VaR Calculations](Longevity12-092216.pdf).  **UCSB Statistics Department Gaussian Process Research Group**.  *November 2016*.
 * [Statistical Emulators \& Gaussian Processes](Pstat-May16.pdf). **UCSB Statistics Department Colloquium**. *May 2016*.
-* [Proving the Central Limit Theorem in the strong operator topology](201c central limit theorem.pdf). **UCSB Mathematics Department**. *May 2015*.
+* [Proving the Central Limit Theorem in the strong operator topology](201c-central-limit-theorem.pdf). **UCSB Mathematics Department**. *May 2015*.
