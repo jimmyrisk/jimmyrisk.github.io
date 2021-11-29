@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 
-Welcome to my webpage!  My name is Jimmy Risk, an assistant professor of mathematics and statistics at Cal Poly Pomona.  I am learning Mandarin and 繁體中文.  I enjoy travelling, hiking, and playing tennis.
+Welcome to my webpage!  My name is Jimmy Risk, an assistant professor of [mathematics and statistics](https://www.cpp.edu/sci/mathematics-statistics/) at [Cal Poly Pomona](https://www.cpp.edu/).  I am learning Mandarin and 繁體中文.  I enjoy travelling, hiking, and playing tennis.
 
 Below you will find my contact information along with a brief introduction to my research.  You can find more detailed information by using the quick-links up top.
 
