@@ -33,7 +33,7 @@ I love advising students!  There is immense fulfillment in guiding someone throu
 
 ### Kaitlyn McGloin
 
-* Topic: Methodology and Analysis of Collaborative Filtering Recommender Systems
+* Topic: [Methodology and Analysis of Collaborative Filtering Recommender Systems](https://scholarworks.calstate.edu/concern/theses/37720j60b)
 * Completed Spring 2021
 * Currently a *Data Scientist Intern at Los Angeles County Office of the Assessor*
 
