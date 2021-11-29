@@ -32,7 +32,7 @@ From Fall 2020 to Spring 2021, I am coordinator for STA 1200 (one of the largest
 * Biweekly meetings with instructors
 * Assessment and evaluation to improve STA 1200 in the future
 
-## Course Experience
+## Teaching Experience
 
 ### Spring 2022
 
