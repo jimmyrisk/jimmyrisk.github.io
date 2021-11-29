@@ -14,13 +14,12 @@ Below you will find my contact information along with a brief introduction to my
 
 # Contact Information
 
-Jimmy Risk, Assistant Professor
-Cal Poly Pomona, 
-3801 W Temple Ave, Pomona CA 91768
-Department of Mathematics and Statistics
-Room 8-202
-
-``(+1) (231) 633 1473``
+Jimmy Risk, Assistant Professor\
+Cal Poly Pomona, \
+3801 W Temple Ave, Pomona CA 91768\
+Department of Mathematics and Statistics\
+Room 8-202\
+``(+1) (231) 633 1473``\
 ``jrisk (at) cpp (dot) edu``
 
 
