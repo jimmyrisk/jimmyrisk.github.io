@@ -11,6 +11,8 @@ author_profile: true
 
 {% include base_path %}
 
+Please see the [homepage](https://jimmyrisk.github.io/) for a brief explanation of current research projects.
+
 ## Research Interests
 
 My research primarily focuses on **Gaussian processes** (GPs), a Bayesian non-parametric based modelling method.  I have used GPs as a tool in a variety of disciplines including
