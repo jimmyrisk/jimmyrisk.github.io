@@ -23,7 +23,7 @@ I love advising students!  There is immense fulfillment in guiding someone throu
 * Expected Spring 2022
 * Future plans: *career in data science*
 
-## Past Students
+## Graduated Students
 
 ### Charles Amelin
 
