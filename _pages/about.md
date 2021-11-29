@@ -63,7 +63,7 @@ A way to combine the populations can be done through the [Linear Model of Coregi
 
 [Recent work](https://arxiv.org/pdf/1806.07572.pdf) has shown a type of convergence of neural networks to other kernel regressors (e.g. Gaussian processes).  [Later work](https://arxiv.org/pdf/2009.10683.pdf) has shown specific convergence to the Laplace kernel. My student Ronald Lencevicius and I are investigating emperical results to understand rates of convergence and generalization to data sets.
 
-<center><img src="nn.png"></center>
+<center><img src="nn.PNG"></center>
 
 The result relies on the kernel regressor (e.g. posterior mean of GP) and neural network belonging to the same reproducing kernel Hilbert space (RKHS).  However, the underlying Gaussian process does not belong to the same RKHS as its posterior mean.  Current plans are to investigate Gaussian process draws and the neural network draws (not expected values) to assess possible connections, for example regarding uncertainty estimation.
 
