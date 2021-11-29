@@ -34,7 +34,7 @@ Having [published work in Gaussian process (GP) mortality models](https://www.ca
 |:---:|:---:|:---:|:---:|
 | <image src = "japmale9.png" width="219px" height="156px"></image> | <image src = "japfemale9.png" width="219px" height="156px"></image> |<image src = "ukmale9.png" width="219px" height="156px"></image> | <image src = "ukfemale9.png" width="219px" height="156px"></image> |
 
-A way to combine the populations can be done through the [Linear Model of Coregionalization (LMC)](https://arxiv.org/pdf/1106.6251.pdf), as is done in my colleagues work.  However, multiple more recent multi-output GP frameworks can be considered, for example the [Cross Spectral Mixture](https://dl.acm.org/doi/abs/10.5555/2969442.2969463) and [Multi Output Spectral Mixture](https://arxiv.org/pdf/1709.01298.pdf).  Additionally, individual kernels can be specified for the LMC to express certain data properties, to improve model tractability and interpretability.
+A way to combine the populations can be done through the [Linear Model of Coregionalization (LMC)](https://arxiv.org/pdf/1106.6251.pdf), as is done in my colleagues work.  However, multiple more recent multi-output GP frameworks can be considered, for example the [Cross Spectral Mixture](https://dl.acm.org/doi/abs/10.5555/2969442.2969463) and [Multi Output Spectral Mixture](https://arxiv.org/pdf/1709.01298.pdf).  Additionally, individual kernels can be specified in an LMC to enrich a model with known data properties, and to improve model tractability and interpretability.
 
 ## Gaussian Process Super-Resolution
 
@@ -50,8 +50,8 @@ A way to combine the populations can be done through the [Linear Model of Coregi
 
 * Our work involves *kernel analysis* for this task.
 * Current research sticks with a "tried-and-true" kernel (linear, or RBF).  
-* However, we find improvements in using other kernels, like the *Laplace kernel*, which is intended to allow for sharp transitions in pixel intensity.
-* See improved details below.
+* However, we find improvements in using other kernels, like the *Laplace kernel*, which specifically allows for sharp transitions in pixel intensity.
+* See enlarged details below.
 
 | Linear Kernel (Zoomed In)  | Laplace Kernel (Zoomed In) |
 |---|---|
