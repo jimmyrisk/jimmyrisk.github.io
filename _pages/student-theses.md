@@ -15,13 +15,13 @@ I love advising students!  There is immense fulfillment in guiding someone throu
 
 * Topic: **Connections between Neural Tangent and Laplace Kernels**
 * Expected Spring 2022
-* Future plans: pursue PhD
+* Future plans: *pursue PhD*
 
 ### Chris Muzquiz
 
 * Topic: **Multi-output Gaussian Process Kernels for Natural Language Processing**
 * Expected Spring 2022
-* Future plans: career in data science
+* Future plans: *career in data science*
 
 ## Past Students
 
@@ -29,7 +29,7 @@ I love advising students!  There is immense fulfillment in guiding someone throu
 
 * Topic: [Gaussian Process Super-Resolution](https://scholarworks.calstate.edu/downloads/vh53x1825)
 * Completed Summer 2021
-* Future plans: career in data science and/or pursue PhD
+* Future plans: *career in data science and/or pursue PhD*
 
 ### Kaitlyn McGloin
 
@@ -53,6 +53,7 @@ I love advising students!  There is immense fulfillment in guiding someone throu
 
 * Topic: [Introduction to Gaussian Processes For Regression](https://scholarworks.calstate.edu/downloads/pn89d861h?locale=en)
 * Completed Spring 2020
+* Currently a *Credit Analyst at New Omni Bank*
 
 ### Kevin Bailey
 
