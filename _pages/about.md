@@ -14,8 +14,8 @@ Below you will find my contact information along with a brief introduction to my
 
 # Contact Information
 
-Jimmy Risk, Assistant Professor\
-Cal Poly Pomona, \
+Jimmy Risk \
+Cal Poly Pomona \
 3801 W Temple Ave, Pomona CA 91768\
 Department of Mathematics and Statistics\
 Room 8-202\
@@ -28,10 +28,10 @@ Room 8-202\
 
 ## Multi-Population Mortality Models
 
-Having [published work in Gaussian process (GP) mortality models](https://www.cambridge.org/core/journals/astin-bulletin-journal-of-the-iaa/article/gaussian-process-models-for-mortality-rates-and-improvement-factors/A2D48AFF8E32CEABF9B9DB899194D9C2), my colleagues have continued working with [GP's in multi-population settings](https://www.cambridge.org/core/journals/annals-of-actuarial-science/article/abs/multioutput-gaussian-processes-for-multipopulation-longevity-modelling/8D169937E25A576B1D39CD792F57B117).  Roughly speaking, the idea is to group "populations" together to model them together as opposed to individually.  Below we provide forecasted plots on four populations, UK Males, UK Females, Japan Males, Japan Females, for individuals age 84 to project mortality improvement factors.
+Having [published work in Gaussian process (GP) mortality models](https://www.cambridge.org/core/journals/astin-bulletin-journal-of-the-iaa/article/gaussian-process-models-for-mortality-rates-and-improvement-factors/A2D48AFF8E32CEABF9B9DB899194D9C2), my colleagues have continued working with [GP's in multi-population settings](https://www.cambridge.org/core/journals/annals-of-actuarial-science/article/abs/multioutput-gaussian-processes-for-multipopulation-longevity-modelling/8D169937E25A576B1D39CD792F57B117).  Roughly speaking, the idea is to model "populations" jointly as opposed to individually, which tends to be difficult with current mortality models.  Below we provide forecasts for four populations, UK Males, UK Females, Japan Males, Japan Females, for individuals age 84 to project mortality improvement factors.
 
 | Japan Male | Japan Female | UK Male | UK Female  |
-|---|---|---|---|
+|:---:|:---:|:---:|:---:|
 | <image src = "japmale9.png" width="219px" height="156px"></image> | <image src = "japfemale9.png" width="219px" height="156px"></image> |<image src = "ukmale9.png" width="219px" height="156px"></image> | <image src = "ukfemale9.png" width="219px" height="156px"></image> |
 
 A way to combine the populations can be done through the [Linear Model of Coregionalization (LMC)](https://arxiv.org/pdf/1106.6251.pdf), as is done in my colleagues work.  However, multiple more recent multi-output GP frameworks can be considered, for example the [Cross Spectral Mixture](https://dl.acm.org/doi/abs/10.5555/2969442.2969463) and [Multi Output Spectral Mixture](https://arxiv.org/pdf/1709.01298.pdf).  Additionally, individual kernels can be specified for the LMC to express certain data properties, to improve model tractability and interpretability.
@@ -45,7 +45,7 @@ A way to combine the populations can be done through the [Linear Model of Coregi
   * The models are not allowed to have the ground-truth available to them!
 
 | Low-Resolution | Ground Truth | Linear Kernel | Laplace Kernel  |
-|---|---|---|---|
+|:---:|:---:|:---:|:---:|
 | <image src = "SC2_LR.png" width="219px" height="219px"></image> | <image src = "SC2_GT.png" width="219px" height="219px"></image> |<image src = "SC2_DP.png" width="219px" height="219px"></image> | <image src = "SC2_EXP.png" width="219px" height="219px"></image> |
 
 * Our work involves *kernel analysis* for this task.
