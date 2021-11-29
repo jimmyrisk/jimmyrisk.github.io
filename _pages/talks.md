@@ -6,9 +6,9 @@ author_profile: true
 ---
 {% include base_path %}
 
-I have travelled worldwide to give academic talks, often attending the [International Longevity Risk and Capital Markets Solutions Conference (Longevity)](https://www.bayes.city.ac.uk/faculties-and-research/centres/pensions-institute/events/longevity-16) currently held by Bayes Business School in the University of London.  For example, I have visited Lyon France, Chicago USA, and Amsterdam Netherlands through this conference alone.
+I have travelled worldwide to give academic talks, often attending the [International Longevity Risk and Capital Markets Solutions Conference (Longevity)](https://www.bayes.city.ac.uk/faculties-and-research/centres/pensions-institute/events/longevity-16) currently held by Bayes Business School in the University of London.  Through this conference, I have given talks in Lyon France, Chicago USA, and Amsterdam Netherlands.
 
-Below is a full list of talks I have given, with slides and/or documents if applicable.
+Below is a full list of talks I have given, with slides and/or documents (when applicable).
 
 ## Invited Lectures
 
