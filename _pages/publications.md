@@ -15,15 +15,14 @@ Please see the [homepage](https://jimmyrisk.github.io/) for a brief explanation 
 
 ## Research Interests
 
-My research primarily focuses on **Gaussian processes** (GPs), a Bayesian non-parametric based modelling method.  I have used GPs as a tool in a variety of disciplines including
+My research primarily focuses on **Gaussian processes** (GPs), a Bayesian non-parametric based modeling method, which I have utilized across various disciplines. These include:
 
-* **financial mathematics** (quantile of loss estimation and pricing), 
-* **actuarial science** (mortality modelling and pricing), 
-* **modern machine learning tasks** (super-resolution, computer vision classification) 
+* **Financial Mathematics and Sports Analytics**: My exploration in financial mathematics, particularly in the quantile of loss estimation and pricing, seamlessly extends into the realm of sports analytics. This interdisciplinary approach has led to innovative frameworks in player valuation in soccer, blending financial models with network theory to assess player market values.
+* **Actuarial Science**: In mortality modeling and pricing, I have recently delved into using GPs and genetic algorithms for qualitatively assessing mortality populations. This innovative approach allows for a more nuanced understanding of mortality trends, enhancing the precision and interpretability of actuarial models.
+* **Modern Machine Learning Tasks**: My work encompasses a range of machine learning applications, from super-resolution and computer vision classification to analyzing the roles of kernels in machine learning tasks.
 
-Gaussian processes are a kernel based method (the same kernel used in e.g.~support vector machines) and much of my current research is on analyzing and interpreting various roles of kernels in machine learning tasks.  A primary goal of mine is to connect interpretable and well founded methodology in probability and statistics to modern data science.  For example, a neural network used to model an unknown mapping ``f`` is a black box in the sense that studying the neural network will give limited to no insight on the structure of the function being approximated.  In contrast, in using a GP for this task, the kernel of a GP yields the underlying properties of ``f``, such as differentiability, continuity, periodicity, etc..  
+A significant aspect of my research is to bridge well-founded methodologies in probability and statistics with modern data science challenges. Unlike the black box nature of neural networks, Gaussian processes, through their kernel structure, provide insights into the properties of the function being modeled, such as differentiability, continuity, and periodicity. This approach underlines my commitment to developing transparent, interpretable, and robust solutions to state-of-the-art problems in data science.
 
-I acknowledge state of the art problems and methodology, and value a probabilistic and statistical approach to make advanced tasks more transparent, interpretable, and robust.
 
 ## Publications
 
