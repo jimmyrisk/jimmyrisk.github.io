@@ -34,37 +34,37 @@ From Fall 2020 to Spring 2021, I am coordinator for STA 1200 (one of the largest
 
 ## Teaching Experience
 
-### Spring 2022
+### Spring 2024
 
-* [STA 4250 Survival Analysis](https://catalog.cpp.edu/preview_course_nopop.php?catoid=51&coid=223990)
-* [STA 5300 (Graduate) Random Processes](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=165649)
-* [STA 5900 (Graduate) Statistical Consulting](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=161429)
+* [STA 4430 Mathematical Statistics II](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=165619)
+* [STA 4990 Introduction to Statistical Learning (Special Topics)](https://hastie.su.domains/ISLRv2_website.pdf)
 
-### Fall 2021
+### Fall 2023
 
-* [STA 3100 Sampling Methods and Applications](https://catalog.cpp.edu/preview_course_nopop.php?catoid=51&coid=223952)
-* [STA 5250 (Graduate) Time Series Analysis](https://catalog.cpp.edu/preview_course_nopop.php?catoid=51&coid=224149)
+* (On Sabbatical)
 
-
-### Past (Fall 2017 -- Summer 2021)
+### Past (Fall 2017 -- Summer 2023)
 
 #### Undergraduate Courses
 
-* [STA 1200 (& 1200H) Statistics with Applications (Honors)](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=158743) (S18, Su18, F18)
+* [STA 1200 (& 1200H) Statistics with Applications (Honors)](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=158743) (Sp18, Su18, F18, Su23)
 * [STA 2100 Introduction to Statistics](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=161349) (F18, F20)
-* [STA 4320 Applied Regression Analysis](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=161352) (F18, Su20)
-* [STA 4250 Survival Analysis](https://catalog.cpp.edu/preview_course_nopop.php?catoid=51&coid=223990) (S18, S20)
-* [STA 4990 Introduction to Actuarial Science (Special Topics)](syllabus_STA_4990_S21.pdf) (Su21)
+* [STA 3100 Sampling Methods and Applications](https://catalog.cpp.edu/preview_course_nopop.php?catoid=51&coid=223952) (F21)
+* [STA 4320 Applied Regression Analysis](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=161352) (F18, Su20, F22)
+* [STA 4250 Survival Analysis](https://catalog.cpp.edu/preview_course_nopop.php?catoid=51&coid=223990) (Sp18, Sp20, Sp22)
+* [STA 4990 Introduction to Actuarial Science (Special Topics)](syllabus_STA_4990_S21.pdf) (Su21, Su22)
+* [STA 4990 Introduction to Statistical Learning (Special Topics)](https://hastie.su.domains/ISLRv2_website.pdf) (Su22, Sp23)
 * [MAT 2250 Linear Algebra and Differential Equations](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=160776) (Su19, F19)
 * [MAT 3140 Introduction to Real Analysis](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=160779) (Su20)
 * [MAT 4190 Advanced Linear Algebra](https://catalog.cpp.edu/preview_course_nopop.php?catoid=53&coid=236467) (Su21)
 
 #### Graduate Courses
 
-* [STA 5250 (Graduate) Time Series Analysis](https://catalog.cpp.edu/preview_course_nopop.php?catoid=51&coid=224149) (F17, F19)
-* [STA 5320 (Graduate) Linear Statistical Models](https://catalog.cpp.edu/content.php?catoid=36&catoid=36&navoid=2930&filter%5Bitem_type%5D=3&filter%5Bonly_active%5D=1&filter%5B3%5D=1&filter%5Bcpage%5D=42#) (S19)
-* [STA 5650 (Graduate) Multivariate Analysis](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=165658) (F20)
-* [STA 5900 (Graduate) Statistical Consulting](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=161429) (S21)
+* [STA 5250 (Graduate) Time Series Analysis](https://catalog.cpp.edu/preview_course_nopop.php?catoid=51&coid=224149) (F17, F19, F21)
+* [STA 5300 (Graduate) Random Processes](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=165649) (Sp22)
+* [STA 5320 (Graduate) Linear Statistical Models](https://catalog.cpp.edu/content.php?catoid=36&catoid=36&navoid=2930&filter%5Bitem_type%5D=3&filter%5Bonly_active%5D=1&filter%5B3%5D=1&filter%5Bcpage%5D=42#) (Sp19)
+* [STA 5650 (Graduate) Multivariate Analysis](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=165658) (F20, F22)
+* [STA 5900 (Graduate) Statistical Consulting](https://catalog.cpp.edu/preview_course_nopop.php?catoid=36&coid=161429) (Sp21, Sp22)
 * [MAT 5990 (Graduate) Introduction to Measure Theory](syllabus5990Su19.pdf) (Su19)
 
 

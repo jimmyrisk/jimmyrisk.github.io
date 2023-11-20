@@ -12,6 +12,7 @@ Below is a full list of talks I have given, with slides and/or documents (when a
 
 ## Invited Lectures
 
+* [Genetic Algorithm Applications of Gaussian Process Kernels toward Mortality Surface Inference](Risk-RCLR-mortgp_kernel_slides.pdf). **RCLR Modelling and Societal Impact of Longevity and Ageing Conference in Amsterdam**. *May 2023*.
 * [How Random Was That? (An Introduction to Statistical Modelling)](Science_On_Tap_F21.pdf). **Science on Tap (Cal Poly Pomona College of Science)**. *October 2021*.
 * [The Role of a Kernel in Statistical Learning](UCR_Colloquium_Talk.pdf).  **UC Riverside Applied Statistics Colloquium**. *March 2021*. 
 * [Gaussian Process Models for Mortality Rates and Improvement Factors: An Interactive R Markdown Approach](102618.pdf). **AMS Sectional Meeting; Special Session on Markov Processes, Gaussian Processes and Applications in San Francisco, CA**.  *October 2018*.

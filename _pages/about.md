@@ -8,13 +8,14 @@ redirect_from:
   - /about.html
 ---
 
-Welcome to my webpage!  My name is Jimmy Risk, an assistant professor of [mathematics and statistics](https://www.cpp.edu/sci/mathematics-statistics/) at [Cal Poly Pomona](https://www.cpp.edu/).  I am learning Mandarin and 繁體中文.  I enjoy travelling, hiking, and playing tennis.
+Welcome to my webpage!  My name is Jimmy Risk, an assistant professor of [mathematics and statistics](https://www.cpp.edu/sci/mathematics-statistics/) at [Cal Poly Pomona](https://www.cpp.edu/).  I enjoy travelling, hiking, playing pickleball, and learning Mandarin and 繁體中文.
 
 Below you will find my contact information along with a brief introduction to my research.  You can find more detailed information by using the quick-links up top.
 
 # Contact Information
 
 Jimmy Risk \
+Associate Professor \
 Cal Poly Pomona \
 3801 W Temple Ave, Pomona CA 91768\
 Department of Mathematics and Statistics\
@@ -22,21 +23,26 @@ Room 8-202\
 ``(+1) (231) 633 1473``\
 ``jrisk (at) cpp (dot) edu``
 
+# Developed and Maintained Software Packages
+
+## EasyGPR: A User-Friendly Gaussian Process Regression Package
+
+[EasyGPR](https://github.com/jimmyrisk/EasyGPR) is a Python package that I developed to simplify Gaussian Process Regression (GPR) for a wide range of users, especially those familiar with R. It serves as a streamlined wrapper around the GPyTorch library, offering a similar functionality and syntax to the DiceKriging package in R. EasyGPR focuses on ease of use, making Gaussian Process Regression accessible and statistically robust for various applications. This package exemplifies my commitment to bridging the gap between complex statistical methods and practical usability in research and industry.
 
 
 # Primary Research Projects
 
-## Multi-Population Mortality Models
+## Mortality Modelling
 
-Having [published work in Gaussian process (GP) mortality models](https://www.cambridge.org/core/journals/astin-bulletin-journal-of-the-iaa/article/gaussian-process-models-for-mortality-rates-and-improvement-factors/A2D48AFF8E32CEABF9B9DB899194D9C2), my colleagues have extended our work to [GP's in multi-population settings](https://www.cambridge.org/core/journals/annals-of-actuarial-science/article/abs/multioutput-gaussian-processes-for-multipopulation-longevity-modelling/8D169937E25A576B1D39CD792F57B117).  Roughly speaking, the idea is to model "populations" jointly as opposed to individually, which tends to be difficult with current mortality models.  Below we provide univariate forecasts for four populations, UK Males, UK Females, Japan Males, Japan Females, for individuals age 84 to project mortality improvement factors; these forecasts can be improved in a joint setting.
+Building on my (earlier work on Gaussian process (GP) mortality models)(https://www.cambridge.org/core/journals/astin-bulletin-journal-of-the-iaa/article/gaussian-process-models-for-mortality-rates-and-improvement-factors/A2D48AFF8E32CEABF9B9DB899194D9C2), recent collaborations have expanded these models to address broader mortality data challenges. Our recent work in mortality modelling involves developing a flexible GP framework for qualitative investigation of mortality data. The aim is to discover the most suitable covariance structures for mortality analysis using a genetic programming algorithm. This approach allows us to rigorously assess the presence of cohort effects and understand the relative smoothness of mortality surfaces along Age and Year dimensions. 
 
-| Japan Male | Japan Female | UK Male | UK Female  |
-|:---:|:---:|:---:|:---:|
-| <image src = "japmale9.png" width="219px" height="156px"></image> | <image src = "japfemale9.png" width="219px" height="156px"></image> |<image src = "ukmale9.png" width="219px" height="156px"></image> | <image src = "ukfemale9.png" width="219px" height="156px"></image> |
+In a different application, we utilized the GP mortality framework to obtain the (winning entry in the SOA 2021 ILEC Mortality Prediction Contest)[https://www.soa.org/research/opportunities/2021-individual-life-experience-contest/], focusing on the insured population in the United States. This work demonstrates the practicality and efficiency of Gaussian processes in handling large-scale, complex mortality data, paving the way for more nuanced and accurate actuarial predictions.
 
-A way to combine the populations can be done through the [Linear Model of Coregionalization (LMC)](https://arxiv.org/pdf/1106.6251.pdf), as is done in my colleagues work.  However, multiple more recent multi-output GP frameworks can be considered, for example the [Cross Spectral Mixture](https://dl.acm.org/doi/abs/10.5555/2969442.2969463) and [Multi Output Spectral Mixture](https://arxiv.org/pdf/1709.01298.pdf).  Additionally, individual kernels can be specified in an LMC to enrich a model with known data properties, and to improve model tractability and interpretability.
+## Sports Analytics and Financial Mathematics
 
-## Gaussian Process Super-Resolution
+In the exciting intersection of sports analytics and financial mathematics, I have explored innovative frameworks for player valuation in soccer. Utilizing principles from financial mathematics and network theory, our valuation model leverages a "passing matrix" to encapsulate player interactions on the field, utilizing centrality measures to quantify individual influence. This approach provides a dynamic framework for ascertaining a player's fair market value, validated through a case study in the European Premier League (EPL). 
+
+## Gaussian Process Super-Resolution (GPSR)
 
 *Super-resolution* is the term of enlarging low-resolution images while restoring *high-frequency details*.  A *Gaussian process* is a specific type of model that can be used for this task.
 
@@ -57,14 +63,6 @@ A way to combine the populations can be done through the [Linear Model of Coregi
 |---|---|
 | <image src = "SC2_DP1.png" width="260px" height="120px"></image> | <image src = "SC2_EXP1.png" width="260px" height="120px"></image> |
 
-
-## Connections between Neural Networks and Gaussian Process Kernels
-
-[Recent work](https://arxiv.org/pdf/1806.07572.pdf) has shown a type of convergence of neural networks to other kernel regressors (e.g. Gaussian processes).  [Later work](https://arxiv.org/pdf/2009.10683.pdf) has shown specific convergence to the Laplace kernel. My student Ronald Lencevicius and I are investigating emperical results to understand rates of convergence and generalization to data sets.
-
-<center><img src="nn.PNG"></center>
-
-The result relies on the kernel regressor (e.g. posterior mean of GP) and neural network belonging to the same reproducing kernel Hilbert space (RKHS).  However, the underlying Gaussian process does not belong to the same RKHS as its posterior mean.  Current plans are to investigate Gaussian process draws and the neural network draws (not expected values) to assess possible connections, for example regarding uncertainty estimation.
-
+* This work is currently on hold due to hardware failure, but the code is being refactored to work with GPyTorch, a highly efficient and modular implementation of GPs, with GPU acceleration.  This refactoring will allow for promising future research in GPSR including multi-output GPs (e.g. over color channels or patches), and sparse/variational GPs for near real-time GPSR.
 
 

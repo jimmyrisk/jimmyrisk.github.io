@@ -11,25 +11,52 @@ I love advising students!  There is immense fulfillment in guiding someone throu
 
 ## Current Students
 
+### Monica Amezquita
+
+* Topic: **A Temporal Approach to Pedestrian Classification**
+* Expected Completion: Fall 2023
+
+### Alexandra Castelazo
+
+* Topic: **Multistate Markov Models for Analyzing College Student Pathways**
+* Expected Completion: Spring 2024
+
+## Graduated Students
+
+### Daniel Silva
+
+* Topic: **Gaussian Processes for Time Series Regression Forecasting Significant Ocean Wave Heights**
+* Completed Summer 2023
+* Currently a *PhD Student at UC Santa Barbara Statistics & Applied Probability*
+
+### Ricardo Aguila
+
+* Topic: **Applications of PCA to Reinforcement Learning of Gridworld Type Problems**
+* Completed Summer 2023
+
+### Maya Kasfy
+
+* Topic: **History, Overview, and Connections Between Real Analysis and Probability Theory**
+* Completed Summer 2023
+* Currently a *lecturer at Cal Poly Pomona*
+
 ### Ronald Lencevicius
 
 * Topic: **Connections between Neural Tangent and Laplace Kernels**
-* Expected Spring 2022
-* Future plans: *pursue PhD*
+* Summer 2022
+* Currently a *PhD Student at UC Santa Barbara Statistics & Applied Probability*
 
 ### Chris Muzquiz
 
 * Topic: **Multi-output Gaussian Process Kernels for Natural Language Processing**
 * Expected Spring 2022
-* Future plans: *career in data science*
-
-## Graduated Students
+* Currently a *PhD Student at UC Santa Barbara Statistics & Applied Probability*
 
 ### Charles Amelin
 
 * Topic: [Gaussian Process Super-Resolution](https://scholarworks.calstate.edu/downloads/vh53x1825)
 * Completed Summer 2021
-* Future plans: *career in data science and/or pursue PhD*
+* Currently a *Data Scientist*
 
 ### Kaitlyn McGloin
 

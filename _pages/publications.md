@@ -26,16 +26,21 @@ A significant aspect of my research is to bridge well-founded methodologies in p
 
 ## Publications
 
-* Risk, Jimmy, Huynh, Nhan, and Ludkovski, Michael.  **SOA 2021 ILEC mortality prediction contest.**  *Society of Actuaries* (2021). [www.soa.org/globalassets/assets/files/resources/research-report/2021/mort-prediction-contest.pdf](https://www.soa.org/globalassets/assets/files/resources/research-report/2021/mort-prediction-contest.pdf)
-* Risk, Jimmy, and Ludkovski, Michael. **Sequential Design and Spatial Modeling for Portfolio Tail Risk Measurement.** *SIAM Journal on Financial Mathematics 9.4* (2018) 1137-1174. *([arxiv link](https://arxiv.org/pdf/1710.05204.pdf))*
-* Ludkovski, Michael, Risk, Jimmy, and Zail, Howard. **Gaussian Process Models for Mortality Rates and Improvement Factors.** *ASTIN Bulletin: The Journal of the IAA 48.3*  (2018) 1307-1347. *([arxiv link](https://arxiv.org/pdf/1608.08291.pdf))*
+* Risk, Jimmy, and Ludkovski, Michael. **Expressive Mortality Models through Gaussian Process Kernels.** *ASTIN Bulletin: The Journal of the IAA 48.3* (Accepted With Revision Aug 23). [arXiv link](https://arxiv.org/abs/2305.01728)
+* Risk, Jimmy, Switkes, Jennifer, and Zhang, Ann. **N.C. Congressional Districting: A 'Rocks-Pebbles-Sand Approach'.** *Discover Global Society* (To Appear).
+* Risk, Jimmy, Huynh, Nhan, and Ludkovski, Michael. **SOA 2021 ILEC mortality prediction contest.** *Society of Actuaries* (2021). [www.soa.org/globalassets/assets/files/resources/research-report/2021/mort-prediction-contest.pdf](https://www.soa.org/globalassets/assets/files/resources/research-report/2021/mort-prediction-contest.pdf)
+* Risk, Jimmy, and Ludkovski, Michael. **Sequential Design and Spatial Modeling for Portfolio Tail Risk Measurement.** *SIAM Journal on Financial Mathematics 9.4* (2018) 1137-1174. [arxiv link](https://arxiv.org/pdf/1710.05204.pdf)
+* Ludkovski, Michael, Risk, Jimmy, and Zail, Howard. **Gaussian Process Models for Mortality Rates and Improvement Factors.** *ASTIN Bulletin: The Journal of the IAA 48.3*  (2018) 1307-1347. [arxiv link](https://arxiv.org/pdf/1608.08291.pdf)
   * Accompanied ``R`` Notebook: [github.com/jimmyrisk/GPmortalityNotebook](https://github.com/jimmyrisk/GPmortalityNotebook)
-* Risk, Jimmy, and Ludkovski, Michael. **Statistical emulators for pricing and hedging longevity risk products.** *Insurance: Mathematics and Economics* 68 (2016): 45-60. *([arxiv link](https://arxiv.org/pdf/1508.00310.pdf))*
-* Risk, Jimmy.  **Correlations between Google search data and Mortality Rates.** arXiv preprint arXiv:1209.2433 (2012).  [https://arxiv.org/abs/1209.2433](arxiv.org/abs/1209.2433)
+* Risk, Jimmy, and Ludkovski, Michael. **Statistical emulators for pricing and hedging longevity risk products.** *Insurance: Mathematics and Economics* 68 (2016): 45-60. [arxiv link](https://arxiv.org/pdf/1508.00310.pdf)
+* Risk, Jimmy. **Correlations between Google search data and Mortality Rates.** arXiv preprint arXiv:1209.2433 (2012). [arxiv.org/abs/1209.2433](https://arxiv.org/abs/1209.2433)
 
+## Preprints
 
-## Working Papers
+* Risk, Jimmy, and Cohen, Albert. **Stochastic Modeling of Soccer Player Valuation Using Network Theory and Financial Mathematics.** (Working Paper)
+* Risk, Jimmy, Amelin, Charles, and Frank, Hakeem. **Interpretable Kernels for Gaussian Process Super-Resolution.** (Working Paper; To be submitted to IEEE Transactions on Image Processing.)
 
-* Risk, Jimmy, Amelin, Charles, and Frank, Hakeem.  **Interpretable Kernels for Gaussian Process Super-Resolution.** *(Preprint available upon request)*
-* Risk, Jimmy, and Ronald Lencevicius.  **Gaussian Process Specific Comparisons between Neural Tangent and Laplace Kernels.**
-* Risk, Jimmy, and Ludkovski, Michael.  **Flexible Kernels for Multi-Population Gaussian Process Mortality Models.**
+## Books and Book Chapters
+
+* **Book Chapter:** Risk, Jimmy and Ludkovski, Michael. **Gaussian Processes for Statistical Learning in Actuarial Science.** In *Foundations for Undergraduate Research in Mathematics*, Springer. (Rough Draft Completed, Fall 2023)
+* **Book:** Risk, Jimmy. **Gaussian Process Models in Quantitative Finance.** In *SpringerBriefs in Quantitative Finance Series*, Springer. (Proposal Accepted Spring 2023; Work in progress)
