@@ -45,7 +45,11 @@ In a different application, we utilized the GP mortality framework to obtain the
 
 ## Sports Analytics and Financial Mathematics
 
-In the exciting intersection of sports analytics and financial mathematics, I have explored innovative frameworks for player valuation in soccer. Utilizing principles from financial mathematics and network theory, our valuation model leverages a "passing matrix" to encapsulate player interactions on the field, utilizing centrality measures to quantify individual influence. This approach provides a dynamic framework for ascertaining a player's fair market value, validated through a case study in the European Premier League (EPL). 
+In the exciting intersection of sports analytics and financial mathematics, I have explored innovative frameworks for player valuation in soccer. Utilizing principles from financial mathematics and network theory, our valuation model leverages a "passing matrix" modeled by a Markov chain to encapsulate player interactions on the field, utilizing centrality measures to quantify individual influence. This approach provides a dynamic framework for ascertaining a player's fair market value, validated through a case study in the European Premier League (EPL). 
+
+| <image src = "Liverpool--MohamadSalah_player_involvement_norm.png" width="219px" height="219px"></image> | <image src = "Liverpool--TrentAlexander-Arnold_player_involvement_norm.png" width="219px" height="219px"></image> |<image src = "Liverpool--VirgilVanDijk_player_involvement_norm.png" width="219px" height="219px"></image> |
+
+The above images show a metric of player performance, *the normalized probability a player was involved in a play given that a shot on goal happened* (weighed to prefer successful shots), with salary superimposed.  Key scorers like Mohamad Salah illustrate generally higher normalized player involvement values, which is expected.  Next steps are to use mathematical finance tools to compute risk-neutral salaries based on this data, to compare to the realized salaries.
 
 ## Gaussian Process Super-Resolution (GPSR)
 
