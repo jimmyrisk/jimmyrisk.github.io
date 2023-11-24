@@ -27,7 +27,7 @@ A significant aspect of my research is to bridge well-founded methodologies in p
 ## Publications
 
 * Risk, Jimmy, and Ludkovski, Michael. **Expressive Mortality Models through Gaussian Process Kernels.** *ASTIN Bulletin: The Journal of the IAA 48.3* (Accepted With Revision Aug 23). [arXiv link](https://arxiv.org/abs/2305.01728)
-* Risk, Jimmy, Switkes, Jennifer, and Zhang, Ann. **N.C. Congressional Districting: A 'Rocks-Pebbles-Sand Approach'.** *Discover Global Society* (To Appear).
+* Risk, Jimmy, Switkes, Jennifer, and Zhang, Ann. **N.C. Congressional Districting: A 'Rocks-Pebbles-Sand Approach'.** *Discover Global Society* (To Appear [arXiv link](https://arxiv.org/abs/2311.11834)).
 * Risk, Jimmy, Huynh, Nhan, and Ludkovski, Michael. **SOA 2021 ILEC mortality prediction contest.** *Society of Actuaries* (2021). [www.soa.org/globalassets/assets/files/resources/research-report/2021/mort-prediction-contest.pdf](https://www.soa.org/globalassets/assets/files/resources/research-report/2021/mort-prediction-contest.pdf)
 * Risk, Jimmy, and Ludkovski, Michael. **Sequential Design and Spatial Modeling for Portfolio Tail Risk Measurement.** *SIAM Journal on Financial Mathematics 9.4* (2018) 1137-1174. [arxiv link](https://arxiv.org/pdf/1710.05204.pdf)
 * Ludkovski, Michael, Risk, Jimmy, and Zail, Howard. **Gaussian Process Models for Mortality Rates and Improvement Factors.** *ASTIN Bulletin: The Journal of the IAA 48.3*  (2018) 1307-1347. [arxiv link](https://arxiv.org/pdf/1608.08291.pdf)

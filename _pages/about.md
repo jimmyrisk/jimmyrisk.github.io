@@ -36,6 +36,11 @@ Room 8-202\
 
 Building on my (earlier work on Gaussian process (GP) mortality models)(https://www.cambridge.org/core/journals/astin-bulletin-journal-of-the-iaa/article/gaussian-process-models-for-mortality-rates-and-improvement-factors/A2D48AFF8E32CEABF9B9DB899194D9C2), recent collaborations have expanded these models to address broader mortality data challenges. Our recent work in mortality modelling involves developing a flexible GP framework for qualitative investigation of mortality data. The aim is to discover the most suitable covariance structures for mortality analysis using a genetic programming algorithm. This approach allows us to rigorously assess the presence of cohort effects and understand the relative smoothness of mortality surfaces along Age and Year dimensions. 
 
+| Genetic Algorithm Illustration  | Results for JPN Female |
+|---|---|
+| <image src = "ga.png" width="260px" height="120px"></image> | <image src = "CircBar_JPN_Female_complex_v2.png" width="260px" height="120px"></image> |
+
+
 In a different application, we utilized the GP mortality framework to obtain the (winning entry in the SOA 2021 ILEC Mortality Prediction Contest)[https://www.soa.org/research/opportunities/2021-individual-life-experience-contest/], focusing on the insured population in the United States. This work demonstrates the practicality and efficiency of Gaussian processes in handling large-scale, complex mortality data, paving the way for more nuanced and accurate actuarial predictions.
 
 ## Sports Analytics and Financial Mathematics
