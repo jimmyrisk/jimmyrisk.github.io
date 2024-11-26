@@ -30,39 +30,63 @@ Room 8-202\
 [EasyGPR](https://github.com/jimmyrisk/EasyGPR) is a Python package that I developed to simplify Gaussian Process Regression (GPR) for a wide range of users, especially those familiar with R. It serves as a streamlined wrapper around the GPyTorch library, offering a similar functionality and syntax to the DiceKriging package in R. EasyGPR focuses on ease of use, making Gaussian Process Regression accessible and statistically robust for various applications. This package exemplifies my commitment to bridging the gap between complex statistical methods and practical usability in research and industry.
 
 
-# Primary Research Projects
+# Research Interests and Projects
 
-## Mortality Modelling
+## Research Interests
 
-*(Collaboration with [Mike Ludkovski (UCSB)]([https://directory.natsci.msu.edu/Directory/Profiles/Person/101627?org=55&group=87](https://ludkovski.pstat.ucsb.edu/)))* Building on my [earlier work on Gaussian process (GP) mortality models](https://www.cambridge.org/core/journals/astin-bulletin-journal-of-the-iaa/article/gaussian-process-models-for-mortality-rates-and-improvement-factors/A2D48AFF8E32CEABF9B9DB899194D9C2), recent collaborations have expanded these models to address broader mortality data challenges. Our recent work in mortality modelling involves developing a flexible GP framework for qualitative investigation of mortality data. The aim is to discover the most suitable covariance structures for mortality analysis using a genetic programming algorithm. This approach allows us to rigorously assess the presence of cohort effects and understand the relative smoothness of mortality surfaces along Age and Year dimensions. 
+My research primarily focuses on **Gaussian Processes (GPs)**, a Bayesian non-parametric modeling method, which I apply across various disciplines. I am particularly interested in the following areas:
 
-<div style="display: flex; justify-content: center; align-items: center;">
+* **Gaussian Processes and Applications**: Exploring novel covariance functions to enhance the expressivity and interpretability of GPs, enabling their use in diverse applications such as image super-resolution and advanced classification tasks in computer vision.
 
-  <div style="flex: 1; text-align: center; padding: 10px;">
-    <img src="ga.png" alt="Genetic Algorithm Illustration" style="max-width: 100%; height: auto;">
-    <br>
-    <em>Genetic Algorithm Illustration</em>
-  </div>
+* **Financial Mathematics and Quantitative Risk Management**: Investigating GP-based techniques for risk assessment and option pricing, including quantile loss estimation and efficient Monte Carlo simulations. I am also interested in modeling liquidity dynamics in decentralized finance platforms and integrating GPs with stochastic volatility models.
 
-  <div style="flex: 1; text-align: center; padding: 10px;">
-    <img src="CircBar_JPN_Female_complex_v2.png" alt="Results for JPN Female" style="max-width: 100%; height: auto;">
-    <br>
-    <em>Results for JPN Female</em>
-  </div>
+* **Actuarial Science and Mortality Modeling**: Utilizing GPs and genetic algorithms to develop nuanced mortality models that capture age-period-cohort effects. This approach aims to improve the precision and interpretability of mortality forecasts essential for insurance and pension planning.
 
-</div>
+* **Sports Analytics and Mathematical Finance**: Creating innovative player valuation frameworks by combining financial models with network theory to assess player market values dynamically. Additionally, I explore the application of stochastic control methods to optimize team performance strategies throughout a season.
 
+* **Machine Learning and Data Science**: Focusing on kernel expressivity and model interpretability within machine learning. I design novel covariance functions to better capture complex data structures, facilitating transparent and interpretable solutions in areas such as image processing and classification.
 
+### Current Research Projects
 
-In a different application, we utilized the GP mortality framework to obtain the [winning entry in the SOA 2021 ILEC Mortality Prediction Contest](https://www.soa.org/research/opportunities/2021-individual-life-experience-contest/), focusing on the insured population in the United States. This work demonstrates the practicality and efficiency of Gaussian processes in handling large-scale, complex mortality data, paving the way for more nuanced and accurate actuarial predictions.
+#### Empirical Analysis of Decentralized Exchange Liquidity Surfaces
 
-## Sports Analytics and Financial Mathematics
+*(Collaboration with [Dr. Tai-Ho Wang (Baruch College)](https://baruch.cuny.edu/) and [Dr. Shen-Ning Tung (National Tsing Hua University)](https://www.nthu.edu.tw/))* 
 
-*(Collaboration with [Albert Cohen (MSU)](https://directory.natsci.msu.edu/Directory/Profiles/Person/101627?org=55&group=87))* In the exciting intersection of sports analytics and financial mathematics, I have explored innovative frameworks for player valuation in soccer. Utilizing principles from financial mathematics and network theory, our valuation model leverages a "passing matrix" modeled by a Markov chain to encapsulate player interactions on the field, utilizing centrality measures to quantify individual influence. This approach provides a dynamic framework for ascertaining a player's fair market value, validated through a case study in the European Premier League (EPL). 
+Liquidity is a cornerstone of financial markets, and its dynamics in decentralized exchanges like Uniswap v3 present unique challenges. This project pioneers the first comprehensive empirical analysis of liquidity surfaces within the Uniswap v3 framework. Utilizing **Gaussian Processes (GPs)**, we aim to capture the complex spatiotemporal dynamics of liquidity across various price levels and time intervals. Our analysis focuses on multiple liquidity pools, examining how concentrated liquidity provision impacts market efficiency and stability.
 
-| <image src = "Liverpool--MohamadSalah_player_involvement_norm.png" width="235px" height="235px"></image> | <image src = "Liverpool--TrentAlexander-Arnold_player_involvement_norm.png" width="235px" height="235px"></image> |<image src = "Liverpool--VirgilVanDijk_player_involvement_norm.png" width="235px" height="235px"></image> |
+![Liquidity Surface Illustration](liquidity.png)  
 
-The above images show a metric of player performance, *the normalized probability a player was involved in a play given that a shot on goal happened* (weighed to prefer successful shots), with salary superimposed.  Key scorers like Mohamad Salah illustrate generally higher normalized player involvement values, which is expected.  Next steps are to use mathematical finance tools to compute risk-neutral salaries based on this data, to compare to the realized salaries.
+**Modeling Framework**  
+We model the log-liquidity as a latent function \( f(x, t) \), where \( x \) represents tick levels and \( t \) denotes time. The GP framework allows us to flexibly capture non-linear relationships and provide robust uncertainty quantification. Preliminary results demonstrate the effectiveness of GPs in forecasting liquidity trends and identifying key factors influencing liquidity provision.
+
+**Preliminary Findings**  
+Our initial analysis reveals significant non-stationarity in liquidity surfaces, necessitating advanced kernel designs to accurately model temporal and spatial dependencies. Comparative studies with traditional parametric models highlight the superior performance of GPs in handling high-dimensional liquidity data, offering valuable insights for liquidity providers and market designers.
+
+---
+
+#### Stochastic Modeling in Sports Analytics and Financial Applications
+
+*(Collaboration with [Dr. Albert Cohen (Michigan State University)](https://www.msu.edu/) and [Dr. Tai-Ho Wang](https://baruch.cuny.edu/))* 
+
+Building on the **Pythagorean expectation** framework originally developed by Bill James, this project develops dynamic models that integrate mathematical finance with sports analytics that can be used to rigorously price financial derivates in betting markets.
+
+**Key Focus Areas:**
+- **Dynamic Pythagorean Models:** Extending the traditional Pythagorean expectation to a dynamic setting, allowing parameters to vary over time to capture evolving team performance.
+- **Barrier Options in Sports Betting:** Exploring financial derivatives analogous to barrier options, where payoffs depend on performance metrics crossing specific thresholds. This innovation provides new opportunities in the sports betting market.
+- **Model Improvements:** Addressing observed inconsistencies in existing models by incorporating decreasing variance and handling large shocks in performance metrics. Developing stochastic differential equation (SDE) systems to enhance model accuracy and tractability for derivative pricing.
+
+---
+
+#### Optimal Control in Dynamic Sports Models
+
+*(Collaboration with [Dr. Albert Cohen](https://www.msu.edu/) and [Dr. Tai-Ho Wang](https://baruch.cuny.edu/))* 
+
+Building upon our work in sports analytics, this project applies **stochastic control theory** to optimize team performance strategies over a season. By treating the Pythagorean exponent \( \gamma_t \) as a dynamic control variable, we develop models that allow teams to adjust their strategies in real-time to achieve desired performance outcomes. This approach provides a mathematical foundation for decision-making processes in team management, balancing consistency and adaptability.  This research is the first to bridge theoretical control models and practical sports management relating to the seminal work by Bill James, offering actionable insights for coaches and team managers.
+
+**Model Development**  
+We construct a system of stochastic differential equations (SDEs) that govern the dynamics of team performance metrics, incorporating control variables that represent strategic adjustments. The optimal control distribution is derived to minimize a value function that captures performance goals and strategic costs that can be chosen by managers and coaches.
+
+---
 
 ## Gaussian Process Super-Resolution (GPSR)
 
