@@ -12,6 +12,7 @@ Below is a full list of talks I have given, with slides and/or documents (when a
 
 ## Invited Lectures
 
+* [European Football Player Valuation: Integrating Financial Models and Network Theory](soccer_markov_chain.pdf). **AMS 2024 Fall Western Sectional Meeting**. *October 2024*.
 * [Genetic Algorithm Applications of Gaussian Process Kernels toward Mortality Surface Inference](Risk-RCLR-mortgp_kernel_slides.pdf). **RCLR Modelling and Societal Impact of Longevity and Ageing Conference in Amsterdam**. *May 2023*.
 * [How Random Was That? (An Introduction to Statistical Modelling)](Science_On_Tap_F21.pdf). **Science on Tap (Cal Poly Pomona College of Science)**. *October 2021*.
 * [The Role of a Kernel in Statistical Learning](UCR_Colloquium_Talk.pdf).  **UC Riverside Applied Statistics Colloquium**. *March 2021*. 

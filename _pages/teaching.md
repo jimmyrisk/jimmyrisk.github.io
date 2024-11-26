@@ -13,6 +13,7 @@ I believe this comes from my extensive experience in one-on-one tutoring (with s
 
 ## Training and Certification
 
+* Equitable & Engaging Mathematics Teaching Practices (Cal Poly Pomona Workshop) (Summer 24)
 * [Applying the Quality Matters Rubric](https://www.qualitymatters.org/professional-development/workshops/higher-ed-appqmr) (Summer 21)
 * HyFlex Training (Summer 21)
 * [Cal Poly Pomona Safe Zone Ally Training](https://www.cpp.edu/~oslcc/pride/programs-events/safe-zone.shtml) (Fall 19)
@@ -25,7 +26,7 @@ I believe this comes from my extensive experience in one-on-one tutoring (with s
 
 ## STA 1200 Course Coordinator
 
-From Fall 2020 to Spring 2021, I am coordinator for STA 1200 (one of the largest undergraduate courses at CPP).  Duties include
+From Fall 2020 to Spring 2024, I was coordinator for STA 1200 (one of the largest undergraduate courses at CPP).  Duties include
 
 * Creating Canvas course templates
 * Providing resources for instructors and students to succeed in STA 1200
