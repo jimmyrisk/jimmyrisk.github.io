@@ -11,17 +11,17 @@ I love advising students!  There is immense fulfillment in guiding someone throu
 
 ## Current Students
 
-### Monica Amezquita
-
-* Topic: **A Temporal Approach to Pedestrian Classification**
-* Expected Completion: Fall 2023
-
 ### Alexandra Castelazo
 
 * Topic: **Multistate Markov Models for Analyzing College Student Pathways**
-* Expected Completion: Spring 2024
+* Expected Completion: Spring 2025
 
 ## Graduated Students
+
+### Monica Amezquita
+
+* Topic: **A Temporal Approach to Pedestrian Classification**
+* Completed Fall 2023
 
 ### Daniel Silva
 
@@ -50,7 +50,6 @@ I love advising students!  There is immense fulfillment in guiding someone throu
 
 * Topic: **Multi-output Gaussian Process Kernels for Natural Language Processing**
 * Expected Spring 2022
-* Currently a *PhD Student at UC Santa Barbara Statistics & Applied Probability*
 
 ### Charles Amelin
 
@@ -86,7 +85,7 @@ I love advising students!  There is immense fulfillment in guiding someone throu
 
 * Topic: [Statistical Learning for Esports Match Prediction](https://scholarworks.calstate.edu/downloads/kw52jb221?locale=en)
 * Completed Spring 2020
-* Currently a *Mathematical Statistician at Edwards Air Force Base*
+* Currently a *lecturer at Cal Poly Pomona*
 
 ### Gregory Nelson
 
