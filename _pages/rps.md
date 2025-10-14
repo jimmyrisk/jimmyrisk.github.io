@@ -9,7 +9,6 @@ mathjax: true
 ---
 
 # Rock–Paper–Scissors
-{: .text-center}
 
 
 
@@ -61,14 +60,17 @@ Try it yourself!
 * Github URL: [github.com/jimmyrisk/rps](https://github.com/jimmyrisk/rps)
 * Dagshub URL: [dagshub.com/jimmyrisk/rps](https://dagshub.com/jimmyrisk/rps)
 
-<!-- <iframe
+
+{: .text-center}
+
+<iframe
   src="{{ page.api_base }}/ui-lite?api_base={{ page.api_base }}"
   title="RPS Quest Lite"
   style="width:110%;min-height:780px;border:1px solid #d0d7de;border-radius:12px;"
   loading="lazy"
   allowfullscreen
 >
-</iframe> -->
+</iframe>
 
 ---
 OLD BELOW
