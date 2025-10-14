@@ -1,4 +1,21 @@
 _site/
 vendor/
 
+# Optional ignores for Ruby/Bundler artifacts
+# Local bundler config
+.bundle/
+# Vendored gems (already ignored by vendor/)
+# vendor/
+# Gem packages
+*.gem
+# Yarn / node modules (if present)
+node_modules/
+# Editor/IDE
+.vscode/
+.idea/
+# OS files
+.DS_Store
+# Note: Gemfile.lock is usually committed for apps; uncomment if you want to ignore it
+# Gemfile.lock
+
 
