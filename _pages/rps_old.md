@@ -6,6 +6,7 @@ author_profile: false
 # update this when your Cloudflare Tunnel uniform resource locator (URL) rotates
 api_base: "https://mlops-rps.uk"
 mathjax: true
+published: false
 ---
 
 # Rock–Paper–Scissors
