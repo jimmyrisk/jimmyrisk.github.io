@@ -1,7 +1,4 @@
 _site/
 vendor/
 
-# Explicitly ignore bundled gems (some setups add vendor/bundle)
-vendor/bundle/
-
 
