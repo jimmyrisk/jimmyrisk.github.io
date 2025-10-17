@@ -39,7 +39,7 @@ $$
 $$
 where:
 - $x_{t-1}, x_{t-2}, x_{t-3}$ are the three most recent human moves,
-- $\mathcal{H}_{t-1}$ aggregates historical statistics computed from rounds $1, \ldots, t-1$ (cumulative move frequencies, favored-move tendencies, lagged point values; see the next section), and
+- $\mathcal{H}_{t-1}$ aggregates historical statistics computed from rounds $1, \ldots, t-1$ (favoritism tendencies and more; see the next section), and
 - $z_t = (u_t, b_t, w_t, t)$ are the known quantities at time $t$: current scores, round multipliers, and step index.
 
 This structure ensures the defined state is truly Markovian: $\mathcal{H}_{t-1}$ depends only on past information, while $z_t$ contains all time-$t$ observables before the human chooses $x_t$.
@@ -74,7 +74,7 @@ Model training minimizes the negative log-likelihood (cross-entropy loss) over h
 
 $$\mathcal{L}_{\text{CE}} = -\frac{1}{N}\sum_{i=1}^{N} \log p_{\theta}^{(x_i)}(s_i),$$
 
-where $\theta$ denotes model parameters and $p_{\theta}^{(x_i)}(s_i)$ is the predicted probability of the true move $x_i$.  Note that this can be augmented with various penalties, like for logistic regression we include a ridge penalty.  For a game specific penalty, we include a customized **danger penalty** $\lambda_{\text{danger}}$. In this case,
+where $\theta$ denotes model parameters and $p_{\theta}^{(x_i)}(s_i)$ is the predicted probability of the true move $x_i.$  Note that this can be augmented with various penalties, like for logistic regression we include a ridge penalty.  For a game specific penalty, we include a customized **danger penalty** $\lambda_{\text{danger}}$. In this case,
 
 $$\mathcal{L} = \mathcal{L}_{\text{CE}} + \lambda_{\text{danger}} \cdot \frac{1}{N}\sum_{i=1}^{N} p_{\theta}^{(d(x_i))}(s_i),$$
 
@@ -86,11 +86,13 @@ The penalty term $\frac{1}{N}\sum_i p_{\theta}^{(d(x_i))}$ is the mean probabili
 
 ## Decision Making: Bellman Optimality and Greedy Decisions
 
-To make actual in-game decisions, each model uses a fixed policy rule assuming the probabilities it utilizes are the truth for this round.  Mathematically, the underlying control problem involves a finite-horizon Markov decision process with a terminal condition at $\tau = 10$ points. An optimal controller would solve the discrete Bellman optimality equation backward in time:
+To make actual in-game decisions, each model uses a fixed policy rule assuming the probabilities it utilizes are the truth for this round.  Mathematically, the underlying control problem involves a finite-horizon Markov decision process with a terminal condition at $\kappa = 10$ points (the score needed to end the game). An optimal controller would solve the discrete Bellman optimality equation backward in time:
 
 $$V_t(s) = \max_{a \in \mathcal{A}} \Big[ r_t(s,a) + \gamma \, \mathbb{E}\big[ V_{t+1}(S_{t+1}) \mid s, a \big] \Big],$$
 
-with $V_T(s) = 0$ once either player hits the target score $\tau$ and discount $\gamma = 1$. Computing this exactly requires enumerating full joint trajectories over $s_t$.  In practice, this is doable with a short horizon, but due to potential concerns with server issues and runtime, we utilize an approximation.
+where $r_t(s,a)$ is the immediate point differential the bot expects to earn at round $t$ from choosing action $a$ in state $s$, taking the round multipliers into account. The value function satisfies $V_T(s) = 0$ once either player hits the target score $\kappa$, and by default we set the discount $\gamma = 1$ because the game does not attenuate future rewards—every point counts equally toward reaching 10. If $\gamma < 1$ were desired (for example, to encode a preference for faster wins or additional time-based costs), the same recursion applies and would simply down-weight contributions from later rounds.
+
+Computing the exact solution requires enumerating full joint trajectories over $s_t$. In practice, this is doable with a short horizon, but due to potential concerns with server issues and runtime, we utilize an approximation.
 
 In particular, the gameplay service uses a greedy, one-step surrogate. For any candidate bot move $a$, let $b(a)$ denote the human action beaten by $a$ and $\ell(a)$ the action that defeats $a$. The approximation computes
 
@@ -98,7 +100,7 @@ $$\widehat{Q}_t(a) = p_t^{(b(a))} \Big(w_t^{(a)} + B_t(a)\Big) - p_t^{(\ell(a))}
 
 where
 
-$$B_t(a) = \mathbf{1}(u_t + w_t^{(a)} \ge \tau)\cdot \tau, \quad L_t(a) = \mathbf{1}(b_t + w_t^{(\ell(a))} \ge \tau)\cdot \tau, \quad C_t = \tfrac{1}{2}\,\frac{u_t - b_t}{\tau}.$$
+$$B_t(a) = \mathbf{1}(u_t + w_t^{(a)} \ge \kappa)\cdot \kappa, \quad L_t(a) = \mathbf{1}(b_t + w_t^{(\ell(a))} \ge \kappa)\cdot \kappa, \quad C_t = \tfrac{1}{2}\,\frac{u_t - b_t}{\kappa}.$$
 
 The policy picks $\arg\max_a \widehat{Q}_t(a)$. The first term is the expected reward if the human plays the move $a$ beats. The second is the penalty if they counter. The third is a tie-breaker that respects the current score differential. This greedy heuristic, backed by the probabilistic predictions, matches the qualitative behavior of a full dynamic program in offline rollouts while remaining cheap enough to execute in the live API.
 
