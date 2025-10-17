@@ -2,7 +2,7 @@
 layout: single
 title: "MLOps Proof of Concept: Rock Paper Scissors App"
 permalink: /rps/
-author_profile: false
+author_profile: true
 # update this when your Cloudflare Tunnel uniform resource locator (URL) rotates
 api_base: "https://mlops-rps.uk"
 mathjax: true
