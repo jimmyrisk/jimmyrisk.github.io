@@ -8,57 +8,128 @@ api_base: "https://mlops-rps.uk"
 mathjax: true
 ---
 
-# Rock–Paper–Scissors
+# RPS Quest
+
+A game based on Rock-Paper-Scissors, **RPS Quest** is a proof of concept project that builds all steps of the MLOps lifecycle (and more) in a real environment. The system couples a FastAPI gameplay service with a live model registry to observe the complete pipeline (data acquisition, feature extraction, validation, retraining, and promotion) in real time. Full operational details are available in the [GitHub repository](https://github.com/jimmyrisk/rps) and the `docs/` directory.
+
+You can play the game at the bottom of this page or in a [separate browser window](https://mlops-rps.uk/ui-lite).
+
+## Game Mechanics
+
+RPS Quest is a variant of Rock-Paper-Scissors where Rock beats Scissors, Scissors beats Paper, and Paper beats Rock. Each game runs to 10 points *(the UI displays $\text{HP} = 100 - 10\cdot\text{Points}$ for flavor)*. 
+
+* At each round $t$, the human chooses a move $x_t \in \{\mathrm{R}, \mathrm{P}, \mathrm{S}\}$, and 
+* the bot responds with $y_t\in\{\mathrm{R}, \mathrm{P}, \mathrm{S}\}$. 
+* If both the human and the bot pick the same choice (draw), both gain 0.5 points *(to prevent drawn-out games)*.
+* If there is a winner of the round, they earn points according to deterministic round multipliers $w_t = (w_t^{(R)}, w_t^{(P)}, w_t^{(S)})$. These multipliers are generated per game (lowest, middle, highest respectively):
+$$
+  w_t^{(\ell)} = 1.0, \qquad w_t^{(m)} = \beta_t, \qquad w_t^{(h)} = \beta_t + 0.5,
+$$
+where $\beta_t \in \{1.1, 1.2, 1.3, 1.4, 1.5\}$ and $\{\ell, m, h\}$ is assigned a permutation to $\{\mathrm{R}, \mathrm{P}, \mathrm{S}\}$ (randomly, always ensuring that that the lowest-value action beats the highest, the highest beats the middle, and the middle beats the lowest). So the most naive greedy strategy would simply pick the largest value every time (and lose once the opponent realizes the pattern is exploitable).
+
+As an example, if the human plays Rock and the bot plays Scissors, the human earns $w_t^{(R)}$ points. If Rock had the highest points, then Paper has the lowest, and Scissors the middle.  If both play Rock, the round is a draw and each player earns 0.5 points (to prevent excessively drawn-out games). The game ends when either player reaches 10 points *(equivalently, 0 hp)*. 
+
+The first three rounds ($t = 1, 2, 3$) follow scripted opening gambits (following what is common in [competitive rock paper scissors](https://wrpsa.com/gambits-of-rock-paper-scissors/)) to provide a unified state space for modelling, and also to provide an informed initial action distribution *(this is also generally a good strategy, look at the link!)*
+
+### Bot Policy and State Representation
+
+The bot policy operates on a Markovian state representation. Let $u_t$ and $b_t$ denote the human and bot cumulative scores at the start of round $t$. The state at time $t$ is
+$$
+  s_t = \big(x_{t-1}, x_{t-2}, x_{t-3}, \mathcal{H}_{t-1}, z_t\big),
+$$
+where:
+- $x_{t-1}, x_{t-2}, x_{t-3}$ are the three most recent human moves,
+- $\mathcal{H}_{t-1}$ aggregates historical statistics computed from rounds $1, \ldots, t-1$ (cumulative move frequencies, favored-move tendencies, lagged point values; see the next section), and
+- $z_t = (u_t, b_t, w_t, t)$ are the known quantities at time $t$: current scores, round multipliers, and step index.
+
+This structure ensures the defined state is truly Markovian: $\mathcal{H}_{t-1}$ depends only on past information, while $z_t$ contains all time-$t$ observables before the human chooses $x_t$.
+
+## Feature Engineering
+
+The specific features stored in $s_t$ are described below.  Categorical variables are one-hot encoded, resulting in a total of 50 features.
+
+| Feature Group | Count | Description |
+|:--------------|:-----:|:------------|
+| User move history | 9 | One-hot encoding of $x_{t-1}, x_{t-2}, x_{t-3}$ |
+| Bot move history | 9 | One-hot encoding of $y_{t-1}, y_{t-2}, y_{t-3}$ |
+| Result history | 9 | One-hot encoding of round outcomes (win/lose/draw) for $t-1, t-2, t-3$ |
+| Current round points | 3 | $w_t^{(R)}, w_t^{(P)}, w_t^{(S)}$ (from $z_t$) |
+| Lagged point values | 9 | Historical point weights from previous three rounds (from $\mathcal{H}_{t-1}$) |
+| User tendencies | 3 | Cumulative frequencies from $\mathcal{H}_{t-1}$: $\frac{\#\{R\}}{\text{total}}$, $\frac{\#\{P\}}{\text{total}}$, $\frac{\#\{S\}}{\text{total}}$ |
+| Favored-move tendencies | 3 | From $\mathcal{H}_{t-1}$: proportion of time the user picks (i) the highest-value move, (2) its counter, or (3) counter-counter |
+| Score context | 4 | From $z_t$: $u_t - b_t$ (score differential), $10-u_t$ (points-to-win for user), $10-b_t$ (points-to-win for bot), step number $t$ |
+| Legacy flag | 1 | `easy_mode` (deprecated; always 0 in new games) |
 
 
 
-Looking at job ads, I realized I had to beef up my skills beyond the academic research and kaggle datasets.  What better way than to build a MLOps enterprise from scratch?  Building this helped me own the full lifecycle: modeling, infrastructure, deployment, and observability, and more importantly, how it operates in a real-world setting.
+Using this setup, we can produce a multinomial distribution over the user's move for this round:
+$$
+  \mathbf{p}_t = \big(p_t^{(R)}, p_t^{(P)}, p_t^{(S)}\big) = \mathbb{P}(x_{t} \mid s_t).
+$$
 
-RPS Quest: A hands-on MLOps proof of concept by an academic aspiring to get into industry!  Play value-based rock-paper-scissors against one of three machine learning models that are continuously trained and monitored with real data!  
+Remark: Before training, features are standardized using scikit-learn's `StandardScaler` fitted on the training set. The same scaler parameters are serialized with each model to ensure inference applies identical transformations.
 
-🧭 Practical Infrastructure: 
-* a single-node k3s Kubernetes cluster orchestrates the workloads, 
-* FastAPI powers the gameplay API, 
-* SQLite keeps durable state, 
-* MinIO serves as the low-latency model cache,
-* DagsHub/MLflow handle registry + experiment tracking,
-* Docker images built from the repo are the authoritative release artifact.
+## Model Training & Loss Functions
 
-🧮 Gameplay runs to 10 points with deterministic round multipliers. Players choose a model to play against:
-* 🧠 Brian - feedforward neural network
-* 🌲 Forrest - XGBoost
-* 🪵 Logan - multinomial logistic regression
+Model training minimizes the negative log-likelihood (cross-entropy loss) over historical gameplay data. For a batch of labeled examples $(s_i, x_i)$, the standard objective is
+$$
+  \mathcal{L}_{\text{CE}} = -\frac{1}{N}\sum_{i=1}^{N} \log p_{\theta}^{(x_i)}(s_i),
+$$
+where $\theta$ denotes model parameters and $p_{\theta}^{(x_i)}(s_i)$ is the predicted probability of the true move $x_i$.  Note that this can be augmented with various penalties, like for logistic regression we include a ridge penalty.  For a game specific penalty, we include a customized **danger penalty** $\lambda_{\text{danger}}$. In this case,
+$$
+  \mathcal{L} = \mathcal{L}_{\text{CE}} + \lambda_{\text{danger}} \cdot \frac{1}{N}\sum_{i=1}^{N} p_{\theta}^{(d(x_i))}(s_i),
+$$
+where $d(x_i)$ is the *danger class* for each move (the one that beats it):
+$$
+  d(R) = P, \quad d(P) = S, \quad d(S) = R.
+$$
+The penalty term $\frac{1}{N}\sum_i p_{\theta}^{(d(x_i))}$ is the mean probability mass the model places on the move that would make the bot lose. In contrast with typical regularization penalties, higher $\lambda_{\text{danger}}$ leads the model toward thinking one step ahead to beat an anticipatory player. The feedforward neural network model also applies a post-hoc adjustment at inference time: it multiplies the danger class probability by $\exp(-\lambda_{\text{danger}})$ and renormalizes, further suppressing risky outputs.
 
-🔧 How it works: 
-* Models predict player actions based as a Markov decision process (state = three action lookback).   
-* Each model is trained to historic data (ingested in real time as gameplay ensues).  
-* Four live aliases (Production, B, shadow1, shadow2) within model types, each with differing hyperparameter configurations. 
-* Models are promoted according to fix rules (win rates, prediction accuracy)
-* Players play against Production or B (50/50 split) to emulate A/B testing (monitor game win rates), and shadow models assess accuracies of potential models.
+## Decision Making: Bellman Optimality and Greedy Decisions
 
-⚙️ Operations I now automated end-to-end:
-- CronJobs trigger sequential training runs that respect a 4 GB RAM / 8 GB swap budget, syncing artifacts to MinIO and DagsHub.  (Hardware is light since I bought this server solely for this project!)
-- A 50-feature contract (lagged moves, historical round values, score context) stays identical between training and serving; parity harnesses replay live games to catch drift.
-- Grafana Cloud publish action accuracy, game win rates, training outcomes, and promotion decisions. A custom ledger endpoint feeds Grafana’s JSON datasource without custom plugins.
-- Auto-promotion compares Production vs. B once each alias has 3 or more completed games
-- Periodically rearranges B, shadow1, shadow2 according to accuracy
+To make actual in-game decisions, each model uses a fixed policy rule assuming the probabilities it utilizes are the truth for this round.  Mathematically, the underlying control problem involves a finite-horizon Markov decision process with a terminal condition at $\tau = 10$ points. An optimal controller would solve the discrete Bellman optimality equation backward in time:
+$$
+  V_t(s) = \max_{a \in \mathcal{A}} \Big[ r_t(s,a) + \gamma \, \mathbb{E}\big[ V_{t+1}(S_{t+1}) \mid s, a \big] \Big],
+$$
+with $V_T(s) = 0$ once either player hits the target score $\tau$ and discount $\gamma = 1$. Computing this exactly requires enumerating full joint trajectories over $s_t$.  In practice, this is doable with a short horizon, but due to potential concerns with server issues and runtime, we utilize an approximation.
 
-📈 If headcount were to grow, I'd make some changes:
-- Infrastructure: adjust SQLite to PostgreSQL, add Kafka for event sourcing, layer Spark for feature windows and better data handling, and wrap it all in GitOps with autoscaling. 
-- ML Side: Broader hyperparameter sweeps, add value-aware objectives so policies balance win probability with point preservation, stratified checks by user profile keeps promotion decisions honest as the player base grows.
-
-🗒️ Interesting notes:
-- Logistic regression noticably has the worst accuracy and win rate.  This makes sense as player behavior is highly complex and nonlinear.
-- I was able to include a "danger" penalty in the loss function to help the neural network and logistic regression models; this hedges against losing to the opponent's most likely event
+In particular, the gameplay service uses a greedy, one-step surrogate. For any candidate bot move $a$, let $b(a)$ denote the human action beaten by $a$ and $\ell(a)$ the action that defeats $a$. The approximation computes
+$$
+  \widehat{Q}_t(a) = p_t^{(b(a))} \Big(w_t^{(a)} + B_t(a)\Big) - p_t^{(\ell(a))} \Big(w_t^{(\ell(a))} + L_t(a)\Big) + p_t^{(a)}\, C_t,
+$$
+where
+$$
+  B_t(a) = \mathbf{1}\{u_t + w_t^{(a)} \ge \tau\}\cdot \tau, \quad
+  L_t(a) = \mathbf{1}\{b_t + w_t^{(\ell(a))} \ge \tau\}\cdot \tau, \quad
+  C_t = \tfrac{1}{2}\,\frac{u_t - b_t}{\tau}.
+$$
+The policy picks $\arg\max_a \widehat{Q}_t(a)$. The first term is the expected reward if the human plays the move $a$ beats. The second is the penalty if they counter. The third is a tie-breaker that respects the current score differential. This greedy heuristic, backed by the probabilistic predictions, matches the qualitative behavior of a full dynamic program in offline rollouts while remaining cheap enough to execute in the live API.
 
 
-Try it yourself!
+## Model Roster and MLOps Technicalities
 
-* Play the Game: [mlops-rps.uk/ui-lite](https://mlops-rps.uk/ui-lite)  ([debug version](https://mlops-rps.uk/ui-lite-debug))
-* View Grafana Metrics: [grafana metrics](https://jimmyrisk41.grafana.net/public-dashboards/786f7f916d084387b726ac4e7e8a7d95)
-* Read More: [jimmyrisk.github.io/rps](https://jimmyrisk.github.io/rps/)
-* Github URL: [github.com/jimmyrisk/rps](https://github.com/jimmyrisk/rps)
-* Dagshub URL: [dagshub.com/jimmyrisk/rps](https://dagshub.com/jimmyrisk/rps)
+For the currently deployed app, there are three production model types are maintained, each with a Production alias, a B-test alias, and two shadow slots for staging promotions (a total of 12 models):
+
+- **Feedforward neural network ("Brian")** — A PyTorch architecture with batch normalization, dropout, and ReLU activations. Trained with the danger penalty in the loss function and applies an additional post-inference adjustment to suppress risky predictions. Hidden layer configurations range from compact (64, 32) to wide (512, 256) across the hyperparameter sweep. This model's flexibility allows it to learn complex nonlinear patterns in the 50-feature space.
+
+- **XGBoost ("Forrest")** — Gradient-boosted decision trees trained on the same 50 features. Tree-based models handle feature interactions naturally and provide interpretable feature importance scores. Game-stratified folds and careful tuning of tree depth, learning rate, and number of estimators ensure robust predictions. XGBoost does not use the danger penalty directly (as it outputs class probabilities via softmax), but the greedy policy downstream evaluates these probabilities conservatively.
+
+- **Multinomial logistic regression ("Logan")** — A single-layer softmax model with optional class weighting and the danger penalty integrated into the loss. This model has limitations, as we do not expect human decisions to be linear over a collection of straightforward features. However, it provides a calibrated probabilistic baseline, and still provides a challenge.
+
+Hyperparameter sweeps explore architectures, learning rates, dropout rates, weight decay, $\lambda_{\text{danger}}$, ridge regularizations, and more. Each configuration trains with game-stratified $k$-fold cross-validation to respect timing issues boundaries and prevent data leakage. After training, models are logged to (MLflow)[https://dagshub.com/jimmyrisk/rps/models]. A CronJob orchestrator evaluates cross-validation accuracy and assigns models to Production, B, shadow1, or shadow2 aliases. The auto-promotion logic swaps aliases when a challenger outperforms the "production" model on live testing games.
+
+All three trainers share the same trainer pipeline via MLflow, feature extraction and scaling, and game-stratified cross-validation. Each model produces $\mathbf{p}_t$ at inference time by calling the trained model on $s_t$ (with models loaded in a cache). CronJobs in the cluster automate the process by rotating aliases, evaluate B-versus-Production win rates, and train models continuously to new data.
+
+## More Links
+
+- Play the Game: [mlops-rps.uk/ui-lite](https://mlops-rps.uk/ui-lite) (and the [debug interface](https://mlops-rps.uk/ui-lite-debug))
+- Inspect live metrics: [Grafana dashboard](https://jimmyrisk41.grafana.net/public-dashboards/786f7f916d084387b726ac4e7e8a7d95)
+- Explore the code and runbooks: [github.com/jimmyrisk/rps](https://github.com/jimmyrisk/rps)
+- MLflow experiment lineage: [dagshub.com/jimmyrisk/rps](https://dagshub.com/jimmyrisk/rps)
+
+Or, play the game in the embedded window below!
+
+Have any questions?  Feel free to e-mail me or connect on linkedin!
 
 
 {: .text-center}
@@ -71,34 +142,3 @@ Try it yourself!
   allowfullscreen
 >
 </iframe>
-
----
-OLD BELOW
----
-
-How does it work?
-
-* Rock-Paper-Scissors with deterministic round multipliers (1.0–2.0); you win by driving the opponent from 100 → 0 points.
-* Models ingest a 50-feature vector: lagged user/bot moves, prior results, historical round values, score differentials, and an easy-mode flag at index 49.
-* Expected values are recomputed every round so the policy picks the move with the best outcome under current stakes; easy mode tilts the distribution toward weaker moves for accessibility.
-* Gambit openings cover rounds 1–3 before ML predictions kick in, keeping the first turns approachable.
-
-How is it MLOps?
-
-* Kubernetes CronJobs retrain models, sync artifacts to MinIO, and log to MLflow so every alias points to a known run.
-* Auto-promotion compares Production vs. B, reorders challengers by live accuracy.
-* SQLite stores raw games; feature extraction, training code, and parity harnesses live in the repo so audits are reproducible.
-* MinIO caches the 12 active models for sub-second loads; DagsHub keeps the full experiment history.
-* MLflow pyfunc wrappers guarantee serving parity across model families.
-
-
-* Initial training on some basic "human-tendency" algorithms I built (~5000 events, approx. 200 games)
-* Use these to insert games on a schedule if new human data hasn't been obtained, to keep training and metrics fresh.
-
-* Promotion rules: 
-  1. After each staggered training run, compare Production vs. B once both have logged ≥3 completed games; swap if the challenger is winning.
-  2. Re-rank the challenger aliases by live action accuracy so the next-best model is always queued in slot B.
-
-How would I scale it?  
-* Backend: SQLite → PostgreSQL, Kafka for event sourcing, Spark for sliding windows and clean data management, Amazon Simple Storage Service (S3) as durable artifact store (keeping MinIO as cache), add a Horizontal Pod Autoscaler (HPA) and GitOps.
-
