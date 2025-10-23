@@ -18,8 +18,11 @@ main:
   - title: "RPS"
     url: /rps/
 
-  - title: "CV"
+  - title: "Academic CV"
     url: /cv/
+
+  - title: "Resume"
+    url: /files/Jimmy_Risk_Resume.pdf
     
 #  - title: "Guide"
 #    url: /markdown/

@@ -12,6 +12,8 @@ Welcome to my webpage!  My name is Jimmy Risk, an assistant professor of [mathem
 
 Below you will find my contact information along with a brief introduction to my research.  You can find more detailed information by using the quick-links up top.
 
+*I am currently seeking opportunities in Data Science Engineer and Machine Learning Engineer roles. Please feel free to connect with me on [LinkedIn](https://www.linkedin.com/in/jimmy-risk-02b46330/).*
+
 # Contact Information
 
 Jimmy Risk \
@@ -23,44 +25,26 @@ Room 8-202\
 ``(+1) (231) 633 1473``\
 ``jrisk (at) cpp (dot) edu``
 
-# Developed and Maintained Software Packages
+# Recent Publication
 
-## EasyGPR: A User-Friendly Gaussian Process Regression Package
+<img src="book.webp" alt="Gaussian Process Models for Quantitative Finance book cover" width="200" style="float: right; margin-left: 20px; margin-bottom: 10px;">
 
-[EasyGPR](https://github.com/jimmyrisk/EasyGPR) is a Python package that I developed to simplify Gaussian Process Regression (GPR) for a wide range of users, especially those familiar with R. It serves as a streamlined wrapper around the GPyTorch library, offering a similar functionality and syntax to the DiceKriging package in R. EasyGPR focuses on ease of use, making Gaussian Process Regression accessible and statistically robust for various applications. This package exemplifies my commitment to bridging the gap between complex statistical methods and practical usability in research and industry.
+My co-authored book **Gaussian Process Models for Quantitative Finance** (with [Dr. Michael Ludkovski, UC Santa Barbara](https://www.pstat.ucsb.edu/people/michael-ludkovski)) has been published by Springer in the SpringerBriefs in Quantitative Finance series. This book provides the first comprehensive treatment of Gaussian Processes in finance, including extensive literature reviews, advanced methodologies, theoretical foundations, and computational strategies. It serves as a vital resource for researchers and practitioners working at the intersection of machine learning and quantitative finance. [Available now from Springer](https://link.springer.com/book/10.1007/978-3-031-80874-6).
+
+# MLOps Proof of Concept: RPS Quest
+
+[RPS Quest](https://mlops-rps.uk/ui-lite) is a complete MLOps implementation disguised as a Rock-Paper-Scissors game. The project demonstrates the full machine learning lifecycle—data acquisition, feature engineering, model training, evaluation, and automated deployment—in a live production environment. Three distinct model architectures (feedforward neural networks, XGBoost, and logistic regression) compete in an automated registry, with live A/B testing determining promotion to production. The system tracks real-time performance metrics through a [Grafana dashboard](https://jimmyrisk41.grafana.net/public-dashboards/786f7f916d084387b726ac4e7e8a7d95), with all code and documentation available on [GitHub](https://github.com/jimmyrisk/rps) and experiment lineage tracked via [DagshHub](https://dagshub.com/jimmyrisk/rps). This project showcases practical experience with containerized microservices, CI/CD pipelines, model registries, and production monitoring—skills directly applicable to industry ML engineering roles. More details are available on the [dedicated RPS page](/rps/).
 
 
 # Research Interests and Projects
 
-## Research Interests
 
-My research primarily focuses on **Gaussian Processes (GPs)**, a Bayesian non-parametric modeling method, which I apply across various disciplines. I am particularly interested in the following areas:
+### Recent Preprint: Dynamics of Liquidity Surfaces in Uniswap v3
 
-* **Gaussian Processes and Applications**: Exploring novel covariance functions to enhance the expressivity and interpretability of GPs, enabling their use in diverse applications such as image super-resolution and advanced classification tasks in computer vision.
+*(Collaboration with [Dr. Shen-Ning Tung (National Tsing Hua University)](https://www.nthu.edu.tw/) and [Dr. Tai-Ho Wang (Baruch College)](https://baruch.cuny.edu/))* 
 
-* **Financial Mathematics and Quantitative Risk Management**: Investigating GP-based techniques for risk assessment and option pricing, including quantile loss estimation and efficient Monte Carlo simulations. I am also interested in modeling liquidity dynamics in decentralized finance platforms and integrating GPs with stochastic volatility models.
+Our recent preprint presents the first comprehensive empirical analysis of liquidity dynamics in Uniswap v3, the largest decentralized exchange. Using **Gaussian Processes (GPs)**, we model liquidity surfaces across price levels and time, capturing complex spatiotemporal patterns in concentrated liquidity provision. The study analyzes multiple liquidity pools (ETH-USDC, WBTC-USDC, USDC-USDT) at different fee tiers, examining how liquidity provider behavior impacts market efficiency and stability. Our GP-based framework provides robust uncertainty quantification and demonstrates superior performance compared to traditional parametric models in forecasting liquidity trends. [Read the preprint on arXiv](https://arxiv.org/abs/2509.05013).
 
-* **Actuarial Science and Mortality Modeling**: Utilizing GPs and genetic algorithms to develop nuanced mortality models that capture age-period-cohort effects. This approach aims to improve the precision and interpretability of mortality forecasts essential for insurance and pension planning.
-
-* **Sports Analytics and Mathematical Finance**: Creating innovative player valuation frameworks by combining financial models with network theory to assess player market values dynamically. Additionally, I explore the application of stochastic control methods to optimize team performance strategies throughout a season.
-
-* **Machine Learning and Data Science**: Focusing on kernel expressivity and model interpretability within machine learning. I design novel covariance functions to better capture complex data structures, facilitating transparent and interpretable solutions in areas such as image processing and classification.
-
-### Current Research Projects
-
-#### Empirical Analysis of Decentralized Exchange Liquidity Surfaces
-
-*(Collaboration with [Dr. Tai-Ho Wang (Baruch College)](https://baruch.cuny.edu/) and [Dr. Shen-Ning Tung (National Tsing Hua University)](https://www.nthu.edu.tw/))* 
-
-Liquidity is a cornerstone of financial markets, and its dynamics in decentralized exchanges like Uniswap v3 present unique challenges. This project pioneers the first comprehensive empirical analysis of liquidity surfaces within the Uniswap v3 framework. Utilizing **Gaussian Processes (GPs)**, we aim to capture the complex spatiotemporal dynamics of liquidity across various price levels and time intervals. Our analysis focuses on multiple liquidity pools, examining how concentrated liquidity provision impacts market efficiency and stability.
-
-![Liquidity Surface Illustration](liquidity.png)  
-
-**Modeling Framework**  
-We model the log-liquidity as a latent function \( f(x, t) \), where \( x \) represents tick levels and \( t \) denotes time. The GP framework allows us to flexibly capture non-linear relationships and provide robust uncertainty quantification. Preliminary results demonstrate the effectiveness of GPs in forecasting liquidity trends and identifying key factors influencing liquidity provision.
-
-**Preliminary Findings**  
-Our initial analysis reveals significant non-stationarity in liquidity surfaces, necessitating advanced kernel designs to accurately model temporal and spatial dependencies. Comparative studies with traditional parametric models highlight the superior performance of GPs in handling high-dimensional liquidity data, offering valuable insights for liquidity providers and market designers.
 
 ---
 

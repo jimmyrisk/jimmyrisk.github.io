@@ -33,7 +33,7 @@ A key aspect of my research is bridging robust statistical methodologies with mo
 
 ## Publications
 
-* **Book:** Risk, Jimmy and Ludkovski, Michael. **Gaussian Process Models for Quantitative Finance.** In *SpringerBriefs in Quantitative Finance Series*, Springer.  (In Press)
+* **Book:** Risk, Jimmy and Ludkovski, Michael. **Gaussian Process Models for Quantitative Finance.** *SpringerBriefs in Quantitative Finance Series*, Springer, 2025. [https://doi.org/10.1007/978-3-031-80874-6](https://link.springer.com/book/10.1007/978-3-031-80874-6)
   * *The first comprehensive treatment of Gaussian Processes in finance, this book includes extensive literature reviews, advanced methodologies, theoretical foundations, and computational strategies, serving as a vital resource for researchers and practitioners.*
 * **Book Chapter:** Risk, Jimmy and Ludkovski, Michael. **Gaussian Processes for Statistical Learning in Actuarial Science.** In *Foundations for Undergraduate Research in Mathematics*, Springer. (In Press)
 
@@ -42,7 +42,7 @@ A key aspect of my research is bridging robust statistical methodologies with mo
 
 ### Articles
 
-* Risk, Jimmy, and Cohen, Albert.  **European Football Player Valuation: Integrating Financial Models and Network Theory.** *Journal of Quantitative Analysis in Sports* (Accepted with Revision) [arXiv link](https://arxiv.org/pdf/2312.16179)
+* Cohen, Albert and Risk, Jimmy. **European Football Player Valuation: Integrating Financial Models and Network Theory.** *Journal of Quantitative Analysis in Sports* 21.1 (2025): 3-22. [https://doi.org/10.1515/jqas-2024-0006](https://doi.org/10.1515/jqas-2024-0006) | [arXiv link](https://arxiv.org/pdf/2312.16179)
 * Risk, Jimmy, and Ludkovski, Michael. **Expressive Mortality Models through Gaussian Process Kernels.** *ASTIN Bulletin: The Journal of the IAA 54.2 (2024): 327-359.* [arXiv link](https://arxiv.org/pdf/2305.01728)
 * Risk, Jimmy, Switkes, Jennifer, and Zhang, Ann. **N.C. Congressional Districting: A 'Rocks-Pebbles-Sand Approach'.** *Discover Global Society 1.1 (2023): 18.* [arXiv link](https://arxiv.org/pdf/2311.11834).
 * Risk, Jimmy, Huynh, Nhan, and Ludkovski, Michael. **SOA 2021 ILEC mortality prediction contest.** *Society of Actuaries* (2021). [www.soa.org/globalassets/assets/files/resources/research-report/2021/mort-prediction-contest.pdf](https://www.soa.org/globalassets/assets/files/resources/research-report/2021/mort-prediction-contest.pdf)
@@ -54,7 +54,7 @@ A key aspect of my research is bridging robust statistical methodologies with mo
 
 ### Preprints
 
-* Risk, Jimmy, Tung, Shen-Ning, and Wang, Tai-Ho. **Analysis and Forecasting of Liquidity Surfaces in Uniswap v3.** (Working Paper)
+* Risk, Jimmy, Tung, Shen-Ning, and Wang, Tai-Ho. **Dynamics of Liquidity Surfaces in Uniswap v3.** arXiv preprint arXiv:2509.05013 (2024). [arxiv.org/abs/2509.05013](https://arxiv.org/abs/2509.05013)
 * Cohen, Albert, Risk, Jimmy, and Wang, Tai-Ho. **Stochastic Control Approaches to Dynamic Pythagorean Exponent Modelling in Sports Finance.** (Working Paper)
 * Cohen, Albert, Risk, Jimmy, and Wang, Tai-Ho. **Dynamic Pythagorean Exponent Models and Option Pricing with Applications to Baseball.** (Working Paper)
 * Risk, Jimmy, Amelin, Charles, and Frank, Hakeem. **Interpretable Kernels for Gaussian Process Super-Resolution.** (Working Paper; To be submitted to IEEE Transactions on Image Processing)
