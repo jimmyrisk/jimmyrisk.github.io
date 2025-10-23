@@ -1,0 +1,2507 @@
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+arXiv:2509.05013v1 [q-fin.TR] 5 Sep 2025
+
+JIMMY RISK, SHEN-NING TUNG, AND TAI-HO WANG
+Abstract. This paper presents a comprehensive study on the empirical dynamics of Uniswap
+v3 liquidity, which we model as a time-tick surface, Lt (x). Using a combination of functional principal component analysis (FPCA) and dynamic factor methods, we analyze three
+distinct pools over multiple sample periods. Our findings offer three main contributions:
+a statistical characterization of automated market maker liquidity, an interpretable and
+portable basis for dimension reduction, and a robust analysis of liquidity dynamics using
+rolling window metrics. For the 5 bps pools, the leading empirical eigenfunctions explain the
+majority of cross-tick variation and remain stable, aligning closely with a low-order Legendre
+polynomial basis. This alignment provides a parsimonious and interpretable structure, similar to the dynamic Nelson-Siegel method for yield curves. The factor coefficients exhibit a
+time series structure well-captured by AR(1) models with clear GARCH-type heteroskedasticity and heavy-tailed innovations.
+
+1. Introduction
+Decentralized finance (DeFi) [HRS+ 21, GM23] is rapidly transforming financial markets,
+with automated market makers (AMMs) playing a crucial role in this evolution. As a revolutionary force, decentralized exchanges (DEXs) [CJ21] have emerged, attracting millions of
+users to DeFi projects and offering a way to bypass the constraints of traditional financial
+systems.
+Introduced by Uniswap Labs, Uniswap marked a pivotal shift within the DEX landscape
+by replacing traditional order-book mechanisms with its innovative AMM design. Version 1
+enabled censorship-resistant spot trading, allowing swaps between Ether (ETH), Ethereum’s
+native asset, and any ERC-20 token (e.g., USDC, WBTC). Version 2 [AZR20] generalized
+to any two ERC-20 tokens and added an on-chain oracle (a time-weighted average price).
+Version 3 [AZS+ 21] introduced concentrated liquidity, allowing liquidity providers (LPs) to
+allocate capital only within a chosen price interval. Fees accrue from swaps executed when
+the current price lies within the LP’s defined range.
+Liquidity is a fundamental aspect of efficient markets, measuring the ease with which
+an asset can be exchanged without appreciable price impact [BBDG18]. In centralized
+venues, liquidity is extensively studied through limit-order books (LOBs); queueing and
+stochastic partial differential equation (SPDE) models [CST10, HLR15, CM21] effectively
+capture depth dynamics and resilience. By contrast, empirical work on AMM liquidity has
+so far centered on static range-allocation or fee-tier optimization. For example, Heimbach,
+Schertenleib, and Wattenhofer document that realized LP pay-offs hinge on tick-width and
+position lifetime [HSW22]. Fan et al. [FMCM+ 21] formalize the dynamic liquidity provision
+Date: September 8, 2025.
+Key words and phrases. Automatic market making, Decentralized exchange, Decentralized finance.
+1
+
+2
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+problem and focus on a general class of strategies to maximize LP earnings, and follow-up
+work provides a convex stochastic optimization problem that quantifies the optimal interval
+width for a belief-driven LP, providing implications for contract design [FMCA+ 22]. Related is work on optimal adaptive allocation through deep reinforcement learning [ZCY23],
+equilibrium liquidity distribution via mean-field games [BCN24], and predictable-loss-aware
+optimal strategies derived from dynamic continuous time models [CDM24].
+On the more statistical side, panel regressions connect liquidity spreads and depth to
+gas costs, volatility, and fee revenue [ZLW+ 24]; researchers use linear models to forecast
+lookahead volume [MC23]; and statistical tests assess price discovery (across pools) and
+market efficiency [ACDF25]. Complementary work measures impermanent loss and LP risk
+[LHRW21] and clusters trader archetypes via graph embeddings [MC24].
+In summary, liquidity plays a crucial role in understanding larger aspects of DeFi. A better
+understanding of the liquidity surface Lt (x) aids comprehensive risk assessment, capital
+efficiency, and the development of sophisticated trading strategies. As mentioned, Uniswap
+v3 specifically generates a two-dimensional liquidity surface Lt (x) indexed by block-time t and
+tick distance x that represents the quantized price range within the Uniswap v3 architecture.
+In other words, each trading pair has its own temporal landscape, enabling empirical liquidity
+analysis, inference, and modeling. Surprisingly, we find that a thorough statistical description
+of the Lt (x) as a dynamic liquidity surface in (t, x) is still missing. This work is intended to
+fill that gap.
+In particular, we apply methods in dynamic factor models and functional principal component analysis (FPCA) to obtain a low-rank factor representation. This has been applied to find low-rank structures in other dynamic functional financial objects, such as yield
+curves [Lit91, CDR11, Opr22], implied volatility surfaces [AHPP20], and forward curves
+[She09, HSH12].
+To motivate this approach, consider the well-known Nelson–Siegel (NS) factor model as
+introduced by Charles Nelson and Andrew Siegel (1987) [NS87]. This was used as a parsimonious parametric framework to fit the term structure of interest rates (yield curves). The
+NS functional form uses three factors that are combined to approximate the cross-sectional
+shape of yields across maturities in a flexible but low-dimensional way [DLY08]:
+1 − e−λτ
+1 − e−λτ
+ŷt (τ ) = β1,t · 1 + β2,t ·
++ β3,t
+− e−λτ ,
+λτ
+λτ
+
+
+
+
+(1)
+
+where where ŷt (τ ) is the model-implied yield at time t and maturity τ , and β1,t , β2,t , β3,t
+are time-varying coefficients (factors) while λ is a decay parameter that governs the shape.
+While the original model [NS87] considered fixed coefficients (typically re-estimated), this
+dynamic factor model was a later extension by Diebold and Li (2006) [DL06] to incorporate
+time-varying factors. This extends the cross-sectional specification to time-varying factors
+with their own dynamics. Despite its simplicity, this Dynamic Nelson–Siegel (DNS) model
+provides an excellent fit to the term structure at each point in time and often yields forecasts
+that outperform more theoretically complex models in out-of-sample interest rate forecasting.
+By projecting the entire yield curve onto three persistent factors and then modelling those
+factors with low-order autoregressions, Diebold and Li achieved a practical and accurate
+forecasting method for yields [DL06]. Christensen et al. (2011) later connect with existing
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+3
+
+no-arbitrage models for yield curves to add a no-arbitrage link to DNS without sacrificing
+parsimony [CDR11].
+One of the remarkable aspects of the Nelson–Siegel basis is that its three latent factors
+naturally align with the principal components (PCs) observed in empirical yield curve data
+[DL06]. Most of the variation in the yield curve can be explained by these three orthogonal
+factors, colloquially known as level, slope, and curvature, which persistently match the factors
+in the NS model. Specifically, a principal component analysis on a panel of interest rates
+across maturities reveals the first PC to be a level shift affecting all maturities, the second
+PC a slope factor that tilts the curve by raising short rates and lowering long rates or vice
+versa, and the third PC a curvature factor that bends the curve (hump-shaped, affecting
+medium maturities more than short or long ones). This aligns with findings by Litterman
+and Scheinkman (1991) [Lit91], who, through eigendecomposition of the covariance matrix
+of zero-return vectors, showed that the first factor (level) explains 89-90% of variance and
+is nearly constant across maturities; the second factor (slope/twist) explains about 8% and
+exhibits a monotone sign change; and the third factor (curvature/butterfly) explains 1-2%
+and affects medium maturities more. This low-rank structure is also found in other financial
+surfaces. For instance, Cont and da Fonseca (2002) [CF02] observed a similar “level-slopecurvature” for implied volatility surfaces as functions of moneyness and time to maturity.
+1.1. Contributions. In this study, we focus on the empirical dynamics of the liquidity
+surface (t, x) 7→ Lt (x) to answer three core questions: What is the statistical nature of these
+fluctuations? Can they be quantified? Can they be modelled in a parsimonious way? Our
+investigation begins nonparametrically, finding a stable low-rank structure when PCA is
+performed over various time windows. We also find that the nonparametric eigenmode basis
+consistently aligns well with the Legendre polynomial basis, providing an initial attempt at
+a persistent structure akin to the NS decomposition (1). By leveraging both decompositions,
+we identify explicit and persistent stochastic structures in the temporal components.
+Our specific contributions are as follows:
+• We provide a preliminary view of the surface (t, x) 7→ Lt (x) for three key liquidity
+pairs (Ethereum ETH-USDC 5bps (basis points), Ethereum ETH-USDC 30bps, and
+Arbitrum ARB-USDC 5bps) across three distinct time periods, accompanied by a
+high-level statistical analysis.
+• We demonstrate that the infinite-dimensional dynamics (in x) can be effectively analyzed through a lower-dimensional principal component projection, yielding temporal
+coefficients and eigenmodes over tick distance.
+• We identify persistent autoregressive [order 1] (AR(1))–generalized autoregressive
+conditional heteroskedasticity (GARCH) time series structures, with heavy-tailed
+innovations for the temporal coefficients.
+• We show that the Ethereum ETH-USDC 5bps and Arbitrum ARB-USDC 5bps pools
+maintain a stable eigenmode structure that closely aligns with the Legendre polynomial basis, a conclusion we quantify using subspace distance metrics.
+• We use the Legendre polynomials as an interpretable tool for the liquidity surface
+and illustrate the effect of its orthogonal components through volatility shocks.
+• We verify the robustness of our statistical findings by replicating the analysis with
+various preprocessing schemes.
+
+4
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+The rest of this work is outlined as follows: Section 2 covers the background, with 2.1
+detailing the Uniswap v3 framework and the meaning of a liquidity surface, and 2.2 covering
+the statistical methods used. Section 3 provides details on the datasets and preprocessing
+used. The follow-up Section 4 performs the statistical analysis, including PCA and Legendre
+basis decompositions, assessing stability, persistent stochastic structures, and the effects of
+shocks. Lastly, Section 5 finalizes the discussion and provides avenues for future work.
+2. Background
+2.1. Uniswap v3 Liquidity Provision. Uniswap v3 introduced a revolutionary approach
+to decentralized liquidity provision, allowing liquidity providers (LPs) to concentrate their
+capital within specific price ranges. This mechanism fundamentally redefines the relationship
+between an LP’s token holdings and their contribution to the market, moving beyond the
+uniform liquidity distribution of earlier Automated Market Maker (AMM) versions.
+2.1.1. Concentrated Liquidity in Detail. Concentrated liquidity is the cornerstone of Uniswap
+v3’s capital efficiency. Unlike previous iterations, where liquidity was spread evenly across
+the entire price curve, Uniswap v3 empowers LPs to strategically allocate capital within a
+user-defined price range [pl , pr ). This innovative feature hinges on several interconnected
+concepts:
+(1) Liquidity Level L: This parameter quantifies the amount of liquidity an LP provides within their chosen range. Conceptually, it represents the virtual reserves con√
+tributed by the LP, analogous to the constant-product formula, L = xy, used in
+Uniswap v2. An LP’s liquidity level directly determines its share of trading fees and
+its exposure to price movements as long as the market price remains within its defined
+range.
+(2) Liquidity Provision Range [pl , pr ): This is the specific price interval an LP selects for capital deployment. When the current market price p, as reported by the
+AMM, resides within this designated range, the LP’s assets become active for swaps,
+following a predetermined bonding curve [AZS+ 21]. The precise selection of this
+range is paramount, as it dictates the periods during which the LP’s capital actively
+participates in facilitating trades.
+(3) Aggregated Liquidity: Uniswap v3 achieves its distinctive aggregated liquidity
+profile by seamlessly combining contributions from numerous individual LPs, each
+providing liquidity within their own defined price ranges (see Figure 1). Denote the
+i-th LP’s position by its liquidity level Li and its chosen price range [pℓ,i , pr,i ). An
+individual LP’s liquidity Li is only active when the current market price p falls within
+their specified range. The total liquidity, Ltotal (p), available in the Uniswap v3 pool at
+any given price p is then the sum of the liquidity levels of all individual LP positions
+whose active ranges encompass that price:
+Ltotal (p) =
+
+N
+X
+
+Li 1[pℓ,i ,pr,i ) (p).
+
+i=1
+
+This summation illustrates how the distinct liquidity contributions from individual
+LPs are effectively combined at each price point. This process creates a potentially
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+5
+
+non-uniform liquidity distribution across the entire price spectrum, directly influenced
+by where LPs choose to concentrate their capital [TW24]. Consequently, an LP’s
+token holdings and fee earnings are dynamically determined by its individual liquidity
+level Li and how the market price p interacts with its active range [pℓ,i , pr,i ).
+
+Figure 1. Aggregated Liquidity
+
+2.1.2. Comparison with Traditional Limit Order Books. Uniswap v3 represents a significant evolution in AMM design, effectively bridging the gap between constant function market makers (CFMMs) [AC20] and traditional electronic limit order books (LOBs). While
+CFMMs like Uniswap v2 offer simplicity, they lack the expressiveness of LOBs, which maintain a list of outstanding buy and sell orders at specified prices [GPW+ 13]. Uniswap v3’s
+concentrated liquidity feature allows liquidity provider (LP) positions to function akin to
+limit orders in LOBs, thereby approximating more complex demand curves without the full
+state complexity of a traditional order book [MMR23].
+Despite sharing the goal of enabling trades at preferred price levels, Uniswap v3’s narrowrange LP positions and traditional LOB limit orders exhibit fundamental differences in their
+underlying mechanisms and operational characteristics. These distinctions are detailed below:
+(1) Price Specification: A primary distinction lies in how the price is specified. In
+Uniswap v3, LPs define a price range, providing continuous liquidity across that
+interval. Conversely, LOBs rely on specific, discrete price points for each individual
+order.
+(2) Liquidity Provision Mechanism: Liquidity provision differs fundamentally. Within
+a defined range, Uniswap v3 liquidity is continuous and formula-driven, always available according to the bonding curve until fully utilized. In contrast, LOB liquidity is
+offered in discrete, fixed quantities at specific price levels.
+(3) Operational Mechanisms and Trade Execution: Uniswap v3 operates as an
+AMM, utilizing a constant-product formula (adjusted for the specified price range)
+to facilitate swaps. Trades execute instantly against the available liquidity within an
+LP’s range until that liquidity is depleted. In contrast, LOBs function by matching
+submitted buy and sell orders, executed through a greedy matching process at the
+specified price or better.
+
+6
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+(4) Behavior with Market Price Movements: The behavior of positions under market price fluctuations also diverges. If the market price moves outside of a Uniswap
+v3 LP’s defined range, the position becomes inactive, holding its current asset composition until the price re-enters the range. This often necessitates active management
+and potential position withdrawal by the LP to realize intended gains or avoid impermanent loss. In LOBs, limit orders remain in the book until they are either filled
+or explicitly cancelled by the user, irrespective of broader market price movements.
+2.2. Statistical Methods. Suppose for x ∈ X = [−1, 1] and t ≥ 0 we observe {yt (x)}. To
+connect with the previous discussion, yt (x) = log Lt (x), and tick x has been standardized to
+[−1, 1] (see Section 3.2.1 for details). The idea is to decompose
+yt (x) = m(x) +
+
+K
+X
+
+(K)
+
+βt,k uk (x) + rt
+
+(x)
+
+(2)
+
+k=1
+K
+into K factors with basis (or loadings) {uk (x)}K
+k=1 and coefficients (or factor scores) {βt,k }k=1 ,
+(K)
+and rt (x) is the residual truncation error. Through this decoupling, one can separately
+analyze the temporal dynamics through the time series (βt,k )t≥0 and spatial structure through
+the (uk (x))x∈X . Loosely, the goals are
+
+• K small enough and an interpretable structure on the {uk }K
+k=1 so that the model
+remains parsimonious and interpretable;
+• some persistence so that certain properties (e.g., stable basis, distributions of coefficient processes) are stable across time windows;
+(K)
+• K large enough for an appropriate basis {uk }K
+(x) is (approximately)
+k=1 so that rt
+idiosyncratic.
+It is important to note that the first and last goals are often difficult to achieve simultaneously.
+2.2.1. Dynamic Factor Extraction. In practice, we observe a data matrix Y with entries
+{yt (xm )} for t = 1, . . . , T and m = 1, . . . M . We assume
+h the xm are equally
+i spaced. Each
+row of Y corresponds to the observed time-t curve, yt = yt (x1 ), . . . , yt (xM ) . Given the lack
+of prior information about the statistical and functional dynamics of yt (x), a nonparametric
+approach such as principal component analysis (PCA) is appropriate. For this reason, we
+assume the data are centered unless otherwise noted; otherwise, replace yt with yt − y where
+P
+y = T1 Tt=1 yt .
+The following approach applies dynamic factor models [SW11], which are both conceptually and mathematically similar to functional principal component analysis (FPCA) [RS05].
+The former is often employed in econometric settings where there is no necessary structure
+on the M coordinates. The latter considers all objects in L2 (X ) rather than RM , thus imposing structure in the x coordinate. Our equally-spaced and dense setup recovers the same
+subspace as FPCA in the limit; see Section A for details. Note that despite having an enticing name, dynamic FPCA as popularized by Hormann et al. [HKH15] is not appropriate as it
+replaces (2) with a non-factorable double sum (one infinite), improving theoretical properties
+but hindering the purpose of parsimonious interpretability.
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+7
+
+Denote the sample M × M covariance matrix as
+Σ̂ :=
+
+1 ⊤
+Y Y = U ΛU ⊤ ,
+T
+
+(3)
+
+where U ΛU ⊤ is its eigendecomposition (principal component) form. Here, Λ = diag(λ1 , . . . , λM )
+are the eigenvalues of Σ̂ and U has orthonormal columns consisting of Σ̂’s orthonormal eigenvectors u1 , . . . , uM with uk = [uk (x1 ), . . . , uk (xM )]⊤ . For simplicity, assume T > M and full
+rank, so that the eigenvalues can be ordered λ1 > λ2 > · · · > λM > 0.
+For a fixed K ≤ M , PCA yields the optimal rank-K least-squares reconstruction:
+{βt,k }, UK = argmin
+
+T X
+M 
+X
+
+yt (xm ) −
+
+{β̃t,k },ŨK t=1 m=1
+
+K
+X
+
+2
+
+β̃t,k ũk (xm )
+
+,
+
+(4)
+
+k=1
+
+where βt,k = ⟨yt , uk ⟩ under the Euclidean inner product on RM . This solution is also unique
+(up to sign) if we assume ordered eigenvalues and orthonormality on the UK . If yt is weakly
+stationary with var(yt ) = Σ = U ΛU ⊤ , then the same holds true at the population level:
+{βt,k }, UK = argmin E yt −
+{β̃t,k },ŨK
+
+K
+X
+
+2
+
+β̃t,k ũk .
+
+(5)
+
+k=1
+
+In summary, the optimal rank-K representation in (2) is the one produced by the covariance
+(according to squared error, and under expectation in the population setting).
+Remark: If {yt (x)} is weakly stationary, Σ̂ is a consistent estimator of the population
+covariance. If it is not, the decomposition and optimality of (3) and (4) still hold, but the
+interpretations change (see Section 3.2.1).
+We shift the analysis to the truncated
+(K)
+
+yt
+
+(xm ) =
+
+K
+X
+
+βt,k uk (xm ),
+
+m = 1, . . . , M
+
+(6)
+
+k=1
+
+so that t and
+decoupled. The interpretation is that each kth factor consists
+ x have been
+
+(K)
+of the pair βt,k , uk (x) , and is one piece that contributes orthogonally to yt (x), in order
+of decreasing variance explained. Often one chooses K via the cumulative proportion of
+variance explained, where the (cumulative) proportion of variance explained by factor k is
+given by
+K
+X
+λj
+PVEj = PM
+,
+CPVEK =
+PVEj ,
+(7)
+j=1 λj
+j=1
+so that CPVEM = 1. If one finds that K is suitable to achieve a desired threshold (say,
+95%), these K components are individually analyzed. The uk (x) offer insight into a static
+structure of yt (x) in the x coordinate. Under weak stationarity, these are time-invariant
+(asymptotically in the sample case). The scores {βt,k } capture temporal dynamics (e.g.
+AR(1) for k or vector AR(1) (VAR(1)) across k). Statistical properties of the βt,k transfer
+to the associated structural effect uk (x) when reconstructing yt (x). Thus, the stochastic
+properties of the kth factor, such as mean reversion, heavy tails, or heteroskedasticity, can
+be analyzed through its corresponding βt,k .
+
+8
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+While PCA provides a data-driven basis, we also explore the alignment of this basis with
+a fixed, interpretable basis, such as the Legendre polynomials. Details on these comparisons
+and the methodology for evaluating off-grid points are provided in Appendix A.
+2.2.2. Forecasting. One obtains forecasts naturally by forecasting the βt,k through traditional
+time series methods (e.g. AR(1) or VAR(1) in discrete time). Let Ft = σ {ys (xi )}M
+i=1 , s ≤ t
+be the filtration containing all relevant information up to time t and assume the loadings
+uk (x) ∈ Ft , either estimated and fixed or by using a fixed basis. Define
+(K)
+
+β̂t+h|t,k := E[βt+h,k | Ft ],
+
+h
+
+i
+
+(K)
+
+ŷt+h|t (x) := E yt+h (x) | Ft .
+
+Then by linearity
+(K)
+
+ŷt+h|t (x) =
+
+K
+X
+
+β̂t+h|t,k uk (x).
+
+k=1
+(K)
+
+(K)
+
+Further, ŷt+h|t (x) = ŷt+h|t (x) if we assume the remainder satisfies E[rt+h (x)|Ft ] = 0. Consequently, prediction intervals and other distributional quantities can be obtained. Note that
+basis drift affects optimal forecasts, but it is usually mild for short horizons. In practice, the
+basis is periodically updated.
+3. Data and Methodology
+This section details the specific Uniswap v3 liquidity data used in this study, the necessary
+preprocessing steps, and how the data’s characteristics inform our modelling approach. Our
+primary focus is on understanding liquidity behavior relative to the current market price
+through in-sample examination.
+3.1. Uniswap v3 Liquidity Data Characteristics. Our analysis begins with raw liquidity data sourced from an internal API provided by Teahouse Finance, a decentralized finance
+(DeFi) asset-management platform specializing in Uniswap. The goal is to understand the
+aggregated liquidity dynamics over time and the discretized price space. Seminal work in
+Uniswap v3 provides some preliminary stylized facts pertinent to our modelling approach
+[FMCM+ 21, FMCA+ 22]:
+• A large fraction of the liquidity mass lies near the current price, meaning we typically
+observe Lt (x) to be relatively large near x = 0. Here, x represents the normalized
+logarithmic pool price, with x = 0 corresponding to the current pool price. Note that
+there may still be peaks further out.
+• The shape of the liquidity surface can vary significantly depending on LP risk preferences and chosen price interval configurations.
+• Market volatility significantly influences LP behavior. In high-volatility regimes,
+LPs tend to widen their liquidity ranges, which shifts liquidity mass outwards and
+consequently lowers the central peak. Conversely, periods of low volatility are often
+characterized by a tighter, steeper concentration of liquidity around the mid-price.
+One goal is to verify these to the best of our ability and explain them through the dynamic
+factor lens. Throughout, we add additional stylized facts that arise through the statistical
+analysis.
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+9
+
+3.1.1. Datasets Utilized. Our analysis incorporates data from a variety of Uniswap v3 pools
+to assess commonalities, generalizability, and improve robustness of takeaways:
+• Ethereum Mainnet 5bps ETH-USDC pool: This pool serves as our primary
+focus due to its consistently high trading volume and deep liquidity, providing a rich
+dataset for in-depth analysis.
+• Ethereum Mainnet 30bps ETH-USDC pool: Included to investigate how different fee tiers (and thus different ‘tickSpacing‘ values) impact liquidity distribution
+and dynamics, allowing for a comparison against the 5bps pool.
+• Arbitrum 5bps ARB-USDC pool: Included as a crucial robustness check to
+assess if observed features generalize across distinct blockchain environments, specifically Arbitrum (an Ethereum Layer-2 scaling solution), which has different block
+times and transaction costs.
+The times and block numbers are displayed in Table 1. Block spacing was chosen as 115200
+for ARB5 and 2400 for ETH to obtain an (approximate) 8-hour time spacing.
+Dataset
+
+Pool
+
+bps
+
+Time Range
+Spacing
+Start
+End
+Date–time:
+Aug 23, 2023 Nov 26, 2024 8.39 h
+ARB5
+ARB–USDC
+5
+Block Number: 124163200
+278646400 115200
+Date-time:
+Aug 1, 2021 Nov 26, 2024 8.26 h
+ETH5, ETH30 ETH–USDC 5, 30
+Block Number:
+12940529
+21274529
+2400
+Table 1. Full dataset ranges. Dates are rounded to calendar days (UTC). The Spacing column
+reports time spacing (hours) on the date row and block step on the block row. ETH5 and ETH30
+share the same blocks and times. Spacing in hours is computed as the average hourly time between
+the clock times at the exact block-number intervals.
+
+3.2. Applying Dynamic Factor / Functional PCA Models. We give details on our
+implementation of Uniswap v3 liquidity into the framework in Section 2.2. Time t is block
+number, a discrete index advanced by consensus when a new block is appended to the
+chain. Block numbers provide a consistent, immutable, and sequential temporal proxy for
+ordering events. In general, t is stochastically related to its corresponding clock time c(t).
+For example, Ethereum is partitioned into slots of 12 seconds, and at most one block can be
+proposed per slot. One typically observes c(t)−c(t−1) to be approximately 12 seconds, but it
+can sometimes be greater due to skipped or empty blocks and other factors [KM23]. Arbitrum
+is slightly different and has an approximate gap of 0.25 seconds per block [KGC+ 18]. Thus,
+the liquidity surface can be indexed by either the discrete block time t or clock-time c(t).
+When there is no ambiguity, we may interchange t or c(t) for clarity.
+Next, Uniswap v3’s price space is discretized into ticks. The price at an integer tick index
+i is defined by P (i) = 1.0001i , meaning each tick represents a 0.01% (1 basis point) price
+movement. Liquidity ranges for LPs are set between specific tick-spacing multiples s. The
+parameter s varies by pool fee tier (e.g., a 0.05% fee tier uses s = 10) and directly determines
+the minimum width and granularity of liquidity provision ranges. The total liquidity available
+at any given price p is the sum of individual LP contributions whose active ranges encompass
+
+10
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+that price, as previously defined in Section 2.1.1. This aggregation results in the non-uniform
+liquidity distribution we aim to model.
+To analyze liquidity dynamics relative to the current market price, we employ a relative
+tick coordinate system, analogous to how liquidity in LOBs is often described relative to
+the best bid/ask [CM21]. Essentially, this normalizes the current pool price tick to 0, which
+aids in capturing the functional form of liquidity, where behavior is assumed to be more
+consistently described when referenced to the current AMM price rather than absolute price
+levels. Given the vast range of possible Uniswap v3 ticks, this transformation simplifies
+analysis by focusing on relative behavior. For background on price variations in financial
+markets, see [Con01].
+To simplify our modelling approach, we analyze the liquidity at a fixed number of relative
+ticks around the current market price (See Appendix B for details). This method allows us
+to focus on the shape of the liquidity surface close to the price, effectively transforming a
+variable-length dataset into a fixed-length functional form suitable for analysis.
+3.2.1. Further Preprocessing. We make a few miscellaneous comments about preprocessing
+in the subsequent analysis.
+• We work with the logarithmically transformed yt (x) = log Lt (x) as it matches with
+how x is related to the log price (since log P (i) = i log 1.0001), and also helps stabilize
+the associated probability distribution. Furthermore, this is common practice in the
+analysis of financial curves to ensure positivity.
+• We work with the undifferenced log-liquidity data. This is common in situations
+where interpretable factors are paramount. For example, the dynamic Nelson-Siegel
+framework for yield curves is applied to undifferenced data to directly capture the
+level, slope, and curvature of the term structure [DL06], despite unit root behavior
+in many samples. Here, the focus is on providing an interpretation of the inherent
+shape and evolution of the liquidity surface rather than time differences, obtaining an interpretable and parsimonious decomposition. Evidence and implications of
+nonstationarity are discussed throughout the analysis.
+4. Empirical Analysis
+This section presents the empirical analysis of Uniswap v3 liquidity surfaces. The analysis
+is broken into two main types. The first uses the full data in Table 1 and works over
+overlapping rolling windows to assess how certain phenomena persist in time. The second
+focuses on three specific windows with a more in-depth statistical analysis and interpretation
+in each, comparing across windows and datasets. The windows are described in Table 2.
+These windows serve to localize the principal component decomposition to illustrate how
+within-window results provide valuable insights and are aligned across datasets (up to blocknumber variability).
+Hyperparameter choices. The main analysis utilizes M = 201 ticks, so x = 0 is the current
+price and x ∈ {−1.0, . . . , −0.01} and {0.01, . . . , 1.0} are the 100 (log) prices on either side.
+Additionally, the data are provided using blockNumber as the time unit. We use a blocknumber spacing so that yt (x) and yt−1 (x) are approximately 8 hours apart; this corresponds
+to 115200 blocks for ARB5 and 2400 for ETH. This analogously matches a typical 8-hour
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+Window
+1
+2
+3
+
+11
+
+Arbitrum
+Ethereum Mainnet
+ARB–USDC
+ETH–USDC
+Start
+End
+Start
+End
+Date Sep 1, 2023 Jan 22, 2024 Sep 1, 2023 Jan 13, 2024
+Block 126928000
+173008000
+18038129
+18998129
+Date Feb 1, 2024 Jun 16, 2024 Feb 1, 2024 Jun 14, 2024
+Block 176233600
+222313600
+19130129
+20090129
+Date Jul 1, 2024 Nov 12, 2024 Jul 1, 2024 Nov 12, 2024
+Block 227497600
+273577600
+20210129
+21170129
+
+Table 2. Training windows for each dataset. Each window contains T = 400 observations spaced
+at approximately 8-hour intervals. Dates are rounded to calendar days (UTC). Ethereum 5bps and
+30bps share the same windows and blocks.
+
+daily trading window in centralized exchanges. We initially tried a 2-hour spacing, but found
+that movement in the liquidity surface was too sparse to model reliably. Note that liquidity
+data are updated continuously, so there are no breaks during nighttime or during holidays.
+Additionally, whenever PCA is performed, it uses T = 400 rows of data (approximately
+4.5 months), which provides enough data for analysis but not too long a window to overgeneralize.
+Appendix F performs analysis of alternative choices of M and also T = 800. Comparative
+details are discussed in the main text when relevant.
+4.1. Initial Inspection of Log-Liquidity Surface. As an initial inspection, Figure 2
+displays a 3D surface plot of (t, x) 7→ yt (x) (top panel) for the second window of each
+dataset, and a fixed-time cross-sectional plot of yt0 (x) vs x, where t0 is the first time in each
+window (bottom panel). The first and third windows are left out of the top panel for space
+reasons.
+The 3D surfaces generally show liquidity to be unimodal, though the mode may shift over
+time, and additional temporary modes can appear due to stochastic fluctuations. This is
+clearly present in the snapshots for ARB5 and ETH30, and both appear roughly concentrated
+around the current market price (x = 0). ARB5 has some asymmetric tilting across time
+points, and ETH30 has shifts in variability, with the latest date displayed (Jul 1, 2024)
+having noticeably lower values toward the edges, and some spikes toward the center. The
+ETH5 pool exhibits a flatter profile (top panel) and has several spikes in its cross-sections,
+making the general pattern less discernible. These irregularities are also visible in its surface
+plots, with some also appearing in ARB5 at various points.
+To better detect how liquidity profiles shift within a 4.5-month period, we compute the
+sample mean and standard deviation functions of the log-liquidity:
+T
+1X
+y(x) =
+yt (x),
+T t=1
+
+s(x) =
+
+q
+
+s2 (x),
+
+T 
+2
+1X
+s (x) =
+yt (x) − y(x)
+T t=1
+2
+
+(8)
+
+over each window and also the full dataset. These are plotted in Figure 3.
+Consistent with Figure 2, all mean functions in Figure 3 display a tent-like shape centered
+at x = 0, generally consistent with the mean over the full data. ARB5 and ETH5 have
+
+12
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+Figure 2. Top panel: raw log-liquidity surfaces yt (x) over time t and relative tick x according
+to Window 2. Bottom: cross-sectional plots of yt0 (x) against x with t0 being the first time in its
+respective window.
+
+notably stable shapes in the mean (although there are shifts), with some flattening occurring
+in Window 3 for both (more exaggerated for ETH5). ETH30 has a similar shape for the first
+two windows (and full average), but has a less discernible “tent" shape in the third window,
+with a more flattened mode whose location is shifted toward x = −0.25.
+The standard deviation functions of the three datasets vary significantly. While ARB5
+and ETH5 share some similarities, such as a valley shape (which can be tilted or smoothed)
+with higher variance at the edges, they also show distinct characteristics. The ETH5 dataset,
+in particular, has a spike in variance at x = 0, which then rapidly drops before increasing
+again towards the edges. The asymmetry in variance for both ARB5 and ETH5, with higher
+variability around negative ticks, may be due to LPs anticipating price movements. In
+contrast, the ETH30 dataset exhibits a noticeably different and less stable structure. This is
+evidenced by the lack of a clear, persistent ’tent’ shape and significant shifts in its standard
+deviation function over different time periods, reflecting more complex liquidity dynamics in
+this higher-fee pool.
+4.2. Persistence of Variation Explained. With the noticeably different shapes across
+windows, we perform rolling window analysis to see how eigenvalues and proportion of variance explained vary across time. To clarify the timing and meaning of rolling window, we
+denote tj = 0, 10, 20, . . . for j = 1, 2, . . . as the start dates of a rolling window, where tj = 0
+is the same as t = 0 for the full dataset in Table 1. Then PCA is performed over the rolling
+liquidity surface (ytj (x), ytj +1 (x), . . . , ytj +T −1 (x)) for each j = 1, 2, . . .. Thus, each contains
+its own decomposition and summary statistics. As before, T = 400 and M = 201 so that
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+13
+
+Figure 3. Sample mean and standard deviation functions taken over its corresponding window,
+plotted against relative tick x, across all datasets and windows in Table 2. The dashed black lines
+are averages taken over the full dataset in Table 1.
+
+each surface shares 400 − 10 = 390 times with the previous in sequence. Useful summary
+statistics over the windows are shown in Figure 4.
+
+Figure 4. Rolling-window principal component analysis (PCA) of liquidity surfaces. Top: ordered
+eigenvalues (log-scale) for each window of length T = 400, color-coded by the window start date tj
+(lighter = earlier, darker = later). Bottom: cumulative proportion of variance explained (CPVE;
+Eq. (7)) versus tj for fixed ranks K ∈ {3, 4, 5, 6, 7}. Columns correspond to ARB5, ETH5, and
+ETH30.
+
+14
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+The top panel shows the ordered eigenvalues on the log-scale, colored by tj . The lighter
+colors (toward yellow) are at earlier dates, and the darker (brown) are later. All three pairs
+experience a rapid decay up to the 25th or 30th eigenvalue. ARB5 and ETH5 consistently
+stabilize as linear afterward, with stable slopes and slightly shifted intercepts over time
+periods. Moving to ETH30, it has a similar shape to the other two prior to 2023 (yellow and
+light orange), but exhibits a persistent regime shift in late 2023, with a slower decay both in
+the higher ranks and later ranks (up to approximately the 90th rank). The stability across
+dates suggests that a lower rank structure is suitable for ARB5 and ETH5, while ETH30
+may be too unstable.
+The bottom panel of the figure looks specifically at the proportion of variance explained
+over the rolling windows for ranks K = 3, 4, 5, 6, 7. The y-axis is the cumulative PVE as in
+Equation (7) and the x-axis is the rolling window start date. A rank-5 structure appears
+adequate for ARB5 to provide 95% of variance explained, nearly uniform over the times
+considered; a rank 3 structure satisfies 90% cumulative PVE. ETH5 has a similar conclusion
+for K = 5 aside from a period of high volatility in Summer 2022 to Summer 2023. ETH30 is
+generally more volatile, requiring five components to explain 90% of variance up to Summer
+2023; seven is generally not adequate up to 95%. Additionally, the regime shift observed
+in the top panel (late 2023) is present for ETH30: its cumulative PVE drops but does not
+stabilize as of the end date of data collection.
+In summary, ARB5 and ETH5 are generally stable in eigenvalue decay. ARB5 and ETH5
+share many similarities in their cumulative PVE, although ETH5 experiences a drift to
+require more PCs to attain a certain PVE around Jan 2023. Note that it is possible that
+ARB5 could also experience this phenomenon, but it is unobservable due to a lack of data.
+ETH30 has temporal irregularities across both panels.
+Appendix F provides PVE plots for the choices of M = 101, 51, and 11 ticks in comparison
+to M = 201; see Figure 20. There is little difference in moving from M = 101 to M = 201,
+which justifies the choice of M = 201, providing a balance between a sufficient and necessary
+amount of data.
+4.3. PCA: Basis Functions And Their Interpretations. This section performs the
+PC decomposition in Section 2.2.1 for each dataset and window in Table 2. This yields
+the coefficient series (βt,k )Tt=1 and PCA basis uk (x), x ∈ {−1.0, −0.99, . . . , 0.99, 1.0} for k =
+1, . . . , K.
+We choose K = 5 as components to analyze, as this choice is sufficient for 90–95% of
+cumulative PVE for ARB5 and ETH5 over the windows considered. It also appears that for
+these windows, no reasonable choice of K will work for ETH30, but its analysis is considered
+a useful case study. We begin by analyzing the basis functions uk (x) to assess commonalities
+and interpretations. Subsection 4.4 analyzes the time series scores to attach a temporal
+meaning to the coefficient dynamics.
+Figure 5 displays the first five basis functions for each dataset and window. As a baseline,
+ARB5 demonstrates a generally consistent shape and interpretation across windows:
+• u1 (x): Exhibits a slope effect, consistently tilting the liquidity surface. A shock in
+this factor increases liquidity toward x = −1 and simultaneously decreases it toward
+x = +1. This mode explains the largest proportion of variance.
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+15
+
+Figure 5. First five PCA basis functions for each dataset. Rows: dataset, columns: basis function
+index. Three windows are displayed per subpanel. Note that these are unique up to a sign change.
+
+• u2 (x): Represents a mixed level/slope effect: liquidity generally increases as these
+basis functions are strictly positive (aside from part of window 3). The asymmetry
+adds a slope, where one side is increased more than the other.
+• u3 (x): Characterized as a curvature effect: acts as a bell curve or symmetric beta
+distribution. A positive shock in this factor will decrease the liquidity toward the
+center and increase it at the edges.
+• u4 (x) and u5 (x): Show increasing complexity with four and five inflection points,
+respectively, contributing to finer details of the liquidity surface.
+Note that within each window, a more pronounced "level" effect can be obtained by a linear
+combination of u1 and u2 , offsetting their slopes. Comparing Window 3 with Windows 1
+and 2 illustrates the idea of the same effect but in a rotated basis, where an approximate
+level effect can be found regardless of window, but each requires a different way to linearly
+combine the basis functions.
+The ETH5 basis functions are also consistent across windows. The summary is highly
+similar to that of ARB5; we highlight a few differences:
+• u1 (x): Similar in shape to ARB5, but now mostly positive. A positive shock in this
+factor will increase liquidity in the x = −1 direction, with less of an effect toward
+the +1 direction.
+• u2 (x): Slightly more irregular than ARB5. Modes for Windows 1 and 2 are positive,
+whereas Window 3 crosses y = 0 closer to x = 0.
+The remaining three basis functions are still similar, albeit with some slight irregularities
+and less discernable shapes. Across both ARB5 and ETH5, each of uk , k = 3, 4, 5 tends to
+have k − 2 inflection points, consistent with a polynomial representation. One exception is
+
+16
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+Window 1
+
+k
+1
+2
+3
+4
+5
+
+Window 2
+
+Window 3
+
+PVEk
+
+ADF p
+
+sd(βt,k )
+
+τ
+
+PVEk
+
+ADF p
+
+sd(βt,k )
+
+τ
+
+PVEk
+
+ADF p
+
+sd(βt,k )
+
+τ
+
+0.702
+0.184
+0.042
+0.024
+0.009
+
+0.019
+0.000
+0.149
+0.000
+0.000
+
+8.323
+4.257
+2.035
+1.523
+0.945
+
+9.156
+7.295
+5.803
+3.776
+2.591
+
+0.612
+0.274
+0.043
+0.018
+0.007
+
+0.141
+0.050
+0.000
+0.000
+0.003
+
+6.325
+4.228
+1.671
+1.079
+0.679
+
+8.499
+5.914
+3.599
+2.428
+1.753
+
+0.653
+0.260
+0.034
+0.014
+0.008
+
+0.011
+0.033
+0.000
+0.000
+0.000
+
+5.353
+3.376
+1.227
+0.792
+0.601
+
+9.047
+16.839
+2.259
+2.137
+1.421
+
+Table 3. Summary statistics for principal component time series of ARB5 for each window. τ is
+mean reversion time −1/ log |ϕ| from AR(1) fit (in units of 8 hours).
+
+Window 1 for ETH5, which seems to have a higher polynomial order for its fourth and fifth
+basis functions, indicating a more complex functional shape during that period.
+A consistent interpretation of ETH30 is challenging.
+• u1 (x): Often a logistic type shape. A positive shock in this factor would increase liquidity sharply for positive x and decrease it for negative, although the interpretation
+shifts slightly in Window 3 and in Window 2 appears to be making that transition.
+• u2 (x): In all windows, a positive shock would increase liquidity in a neighborhood of
+negative x close to x = 0. Otherwise, there are not many similarities across windows.
+Higher order basis functions become rapidly uninterpretable, aside from factor 3 for window
+2, which is surprisingly a nice mound shape. There seems to be a severe instability over time
+for ETH30’s basis; this is further analyzed in Section 4.5.
+4.4. PCA: Coefficient Time Series. For each principal component time series score associated with the factors above, we provide a time series analysis in two steps: (1) a lightweight
+overview for general observations (directly below), and (2) a second pass that targets specifics
+found in the first pass, including considering specific heteroskedastic models and innovation
+distributions (Section 4.4.3).
+4.4.1. Arbitrum ETH-USDC 5bps (ARB5). Figure 6 presents the time series of the first five
+principal component scores (βt,k ) and their autocorrelations (ACFs) for the ARB5 dataset.
+Table 3 summarizes key statistics for the βt,k , in particular, its proportion of variance explained, augmented Dickey-Fuller (ADF) test p-value, sample standard deviation sd(βt,k )
+(over the window), and mean reversion time τk = −1/ log |ϕ| when fitted to an AR(1)
+model. The ADF test assesses a null of a unit root against a trend stationary alternative.
+Note that we are not performing any formal hypothesis testing, although a larger p-value is
+suggestive of a unit root. For a benchmark comparison, we fix p > 0.1 as a cutoff to indicate
+potential unit root behavior (larger values moreso). These are always visually cross-checked
+with the time series and its ACF. Note that τk and sd(βt,k ) are in reference to an 8-hour
+period of time: τk /3 is the daily reversion time. The standard deviation sd(βt,k ) generally
+does not scale with the sampling interval, so there is no straightforward rule to obtain a
+daily version.
+There is a substantial jump (18–28%) in explained variance from the first to the second
+factor compared to the second to third (3–4%). The decay shape of the ACFs is also persistent
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+Window 1 (2023–2024)
+
+Window 2 (2024)
+
+17
+
+Window 3 (2024)
+
+Figure 6. Time series (left) and autocorrelation functions of βt,k (right, blue) for ARB5. ACF2
+(orange) refers to the autocorrelation of the squared AR(1) residuals ê2t . The gray bar indicates
+the 95% pointwise cutoff for significance from zero autocorrelation. Each ACF equals 1 at lag 0.
+
+across windows: the fourth and fifth factor series typically exhibit rapid decay, while the first
+two are much slower. This is apparent in the table, with rapidly decaying mean reversion
+times, especially for k = 3, 4, 5. The standard deviations also show a similar decay at higher
+modes. Across windows, the standard deviations and mean reversion times are fairly similar,
+with some deviations per mode and window. The most consistent is the reversion time of
+the first factor series, with τ ≈ 8.5–9.2 (2.8–3 days).
+The ADF p-values suggest that most series are stationary, with the exception of Factor 3
+in Window 1 (figure: slow tapering of ACF and non-zero level is indicative of regime shift)
+and Factor 1 in Window 2 (linear decay in ACF like random walk).
+√
+The gray bar in the ACF plots represents the standard 1.96/ n asymptotic 95% pointwise
+cutoff for significant autocorrelation. The orange dots display the ACF of the squared residuals (ê2t ) when the series is fitted to an AR(1). These suggest the presence of heteroskedasticity
+(GARCH effects) in nearly all series, some more pronounced than others.
+4.4.2. First Pass Commonalities and Takeaways Across Datasets. There are many commonalities across datasets. As to not be repetitive with details, the analogous figures and tables
+for ETH5 and ETH30 are given in Appendix C (specifically, Figure 14 and Table 6 for ETH5,
+and 15 and 7 for ETH30), with a brief summary below.
+ETH5 shares many similarities with ARB5, with some differences. Its fourth and fifth
+components have a significantly lower mean reversion time compared to the first three. For
+components 1 and 2, the times are mostly larger (varying from 0.75–3 times larger). The
+proportion of variances explained is also generally lower for the first two, and higher for the
+later components, although it is not extreme. The majority of coefficient series for ETH5
+appear stationary, with one unit root in each window (component 1 in Windows 1 and 2,
+and component 2 in Window 3). The series standard deviations are similar in magnitude to
+ARB5.
+
+18
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+ETH30 is less regular. There are now 1–3 nonstationary series in each window (evidence
+of unit root according to the ADF p), and visual inspection of the ACF verifies a slow
+linear decay in many of the series, some clearly nonstationary. The proportions of variance
+explained also increase in later components; for example, PVE4 , PVE5 in Windows 1 and 2
+increase by 2x compared to ETH5 (which already increased compared to ARB5), mirroring
+the discussion surrounding Figure 4.
+A strong heteroskedastic effect is common across all three datasets, as evidenced by ACF2
+in the figures, which has several significant pieces (often at lower lags). The magnitude of
+ACF2 across lags is remarkably similar across datasets and windows, appearing strongest
+in Window 3 and for the ARB5 dataset. Overall, several common features of the principal
+component time series emerge across all three datasets. The ACFs of the factor scores generally exhibit an exponential decay, characteristic of AR(1) processes. Additionally, significant
+autocorrelations in the squared residuals strongly suggest the presence of GARCH effects,
+indicating time-varying volatility in the principal components, a finding that is almost uniform across all components, datasets, and windows. For ARB5 and ETH5, most windows
+appear to have at most one series with a unit root, which is more pronounced for ETH5. In
+contrast, ETH30 consistently shows 1-3 series per window with this effect, and it is generally
+stronger. Finally, across all datasets, a notable shock in the first coefficient series is observed
+in Window 3 around August. From the start of Window 2, the first two coefficient series
+in both ETH5 and ETH30 share a common pattern of dropping from a neutral or positive
+value to a negative one, followed by a jump in the opposite direction in March. ARB5 shares
+a similar, though less pronounced, shift in its first coefficient series.
+4.4.3. Detailed Time Series Models. To further investigate the statistical properties of the
+score series, we perform model selection across mean, volatility, and distribution specifications using the Bayesian Information Criterion (BIC) [KR95]. To ease notation, we drop the
+subscript k in βt,k until needed. For a given series (βt )Tt=1 and model M (broadly containing
+distributional assumptions, parameters, etc.), write
+βt = µt (Ft−1 ; M) + εt ,
+
+εt = σt (Ft−1 ; M) zt ,
+
+iid
+
+zt ∼ F (M),
+
+(9)
+
+where Fu = (βs , σs , εs )s≤u . The GARCH(1,1) model yields the volatility recursion
+2
+σt2 = ω + αε2t−1 + γσt−1
+,
+
+ω > 0, α, γ ≥ 0.
+
+(10)
+
+The condition α + γ < 1 yields a stationary covariance. The ARCH(1) model is simply a
+2
+GARCH(1,0), meaning it drops the σt−1
+term.
+For a given time series model M with d estimated parameters, let ℓ̂ be the maximized
+log-likelihood with sample size T . The Bayesian information criterion (BIC) is defined as
+BIC = −2ℓ̂ + d log T.
+
+(11)
+
+BIC balances goodness of fit −2ℓ̂ with a complexity penalty d log T . When comparing models
+on the same dataset, the model with lower BIC is preferred. More specifically, if two models
+M1 and M2 have equal prior probabilities, the posterior odds admit the approximation
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+19
+
+[KR95]
+
+
+
+
+P M1 | (βt )Tt=1 )
+
+
+P M2 | (βt )Tt=1
+
+ ≈ exp
+
+ 
+1
+
+2
+
+BIC2 − BIC1
+
+
+
+.
+
+By monotonicity, one often relates these odds with the difference ∆1,2 BIC = BIC2 − BIC1
+as a measure of preference toward M1 (a lower BIC1 gives larger ∆1,2 BIC, increasing its
+odds). Kass and Raftery [KR95] give four evidence cutoffs, for ∆1,2 BIC which are (0, 2),
+[2, 6), [6, 10), and [10, ∞), corresponding respectively to labels “not worth a bare mention”,
+“positive”, “strong”, and “very strong”. Thus, to compare across many Mj , j = 1, . . . , J for
+the same (βt )Tt=1 , it is sufficient to compare each model relative to that with the smallest
+BIC.
+The subsequent analysis considers two model selection procedures using BIC as a comparative metric. The following is performed for all factor score series within each window and
+dataset:
+(1) Using an AR(1) mean (no trend or intercept), fit a collection of heteroskedastic
+models and distributions. This is done first because the current analysis strongly
+suggests an AR(1) style component with apparent heteroskedasticity but imprecise
+details.
+(2) Using volatility models based on step (1), double-check if the mean specification is
+correct.
+For the first step, the idea is to check some overarching properties and commonalities across
+datasets, windows, and factors. Since there are no specific hypotheses to be tested, we sweep
+over a large collection of volatility specifications and innovation distributions that can assess
+a variety of properties. All modelling is done with the arch package [She21] in Python
+and utilizes the majority of available volatility processes: constant volatility, ARCH(1),
+GARCH(1,1), EGARCH(1,0,1), EGARCH(1,1,1), GJR-GARCH(1,1,1), and TARCH(1,1,1).
+See Appendix E for full details of the seven models tested. In summary, this collection of
+volatility models can identify certain traits based on the data’s model preference:
+• not heteroskedastic (homoskedastic): constant volatility;
+• no volatility clustering: ARCH(1);
+• volatility clustering: all GARCH variants;
+• asymmetry effects: EGARCH(1,1,1), GJR-GARCH(1,1,1), TARCH(1,1,1);
+• multiplicative volatility dynamics: EGARCH (both 1,0,1 and 1,1,1);
+• outlier sensitivity: TARCH is less sensitive than (GJR-)GARCH to extreme values;
+EGARCH further compresses through logarithm.
+We also consider all of the available default distributions for the driver of the innovations, zt .
+These are the normal, t, skew-t, and generalized error distribution (GED). Heavy tails are a
+hallmark of the t-distribution. For the GED, we restrict its shape parameter to be greater
+than 2 as an assessment for platykurtic behavior (t will check for leptokurtic). The skew-t
+informs whether there is an instantaneous asymmetry effect (compare with the volatility
+asymmetry, which is state-dependent).
+Parameters are estimated by MLE using arch (Python). Appendix C shows a heatmap
+comparing all 3·3·5 = 45 series across all 4·6 = 24 combinations of volatility and distributions.
+
+20
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+The results are overwhelmingly consistent in favor of some GARCH effect with heavy-tailed
+innovations (t-distribution). More specifically:
+(1) GARCH or GARCH variants always (100%) produced the lowest BIC, when compared to ARCH(1) or a constant volatility.
+(2) The t or skew-t distribution was always (100%) preferred to the normal or platykurtic
+GED.
+(3) The top three choices were EGARCH(1,0,1)-t (26/45 = 57.8%), EGARCH(1,1,1)-t
+(6/45 = 13.3%), and TARCH(1,1,1)-skew t (5/45 = 11.1%).
+(4) There were 11 cases where there was strong or very strong evidence against EGARCH(1,0,1)t (∆BIC > 6). Except for one case with GARCH(1,1)-t, they were either EGARCH(1,1,1)t or a skew-t paired with GARCH(1,1), EGARCH(1,0,1), or TARCH(1,1,1). Out of
+those 11 cases, 7 of them occurred in ARB5.
+Aside from the last bullet, there were no clear patterns where preference was for or against
+a certain model according to dataset or time window.
+In general, conditional heteroskedasticity with heavy tails is unequivocal. The common
+winner is EGARCH(1,0,1)-t, suggesting symmetric volatility with multiplicative growth and
+heavy tails. When asymmetry is preferred, it is mixed between the innovations (skew-t) or
+volatility process (TARCH(1,1,1) or EGARCH(1,1,1)) or both. The results also suggest a
+preference toward regularizing large shocks, since EGARCH generally wins, and TARCH is
+always preferred over GJR-GARCH.
+To check if AR(1) is appropriate, we compare mean models using EGARCH(1,0,1) volatility with t-distributed noise based on the last step. This simply checks different AR(p) orders,
+specifically p = 1, 2, 3, as well as an ARMA(1, 1) model for a potential moving average effect.
+Note that p = 3 could have contextual relevance as three lag units equate to one day (so it
+could be related to a regional trading time, like the operational time differences of America,
+Europe, Asia). A BIC heatmap comparing choices is provided in Appendix C. Toward Occam’s razor, consider the cases where there was a BIC difference of > 6 against AR(1): This
+occurred in 8/45 = 17.8% of the series considered, and ARMA(1,1) was never preferred. An
+AR(3) model was only preferred in ETH5 Window 1, for k = 2, 3, 4. The remaining 5 cases
+of AR(2) were scattered across datasets, windows, and component number. Thus, AR(1) is
+a reasonable choice according to BIC, and is further supported by the ACF decay rates in
+Figure 6.
+4.5. Basis Stability. With many commonalities existing both in the statistical properties
+of the scores and the PCA basis functions, we move toward assessing subspace stability and
+working with a common basis. We use the same rolling window approach as in Section 4.2,
+now keeping track of the full sequence of T × K matrices (Ut )t≥0 over each rolling window
+start time t, where Ut is the matrix whose columns are the orthogonal eigenfunctions in the
+PCA decomposition as computed over the length T window [t, t + T ). We measure basis
+stability using the projection distance in Equation (16). To specifically measure how much
+a subspace is drifting, we use two reference bases:
+• d(Ut , U0 ), the subspace distance between the basis Ut from PCA data over [t, t + T )
+and U0 , the basis estimated at inception [0, T ), and
+• d(Ut , UL ), where L are the Legendre polynomials.
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+21
+
+To motivate the latter, recall that Figure 5 showed similarities with polynomials of increasing degree, relating to terms of its inflection points. Additionally, rotating the first two
+basis functions together formed a type of “intercept plus slope.” The Legendre polynomials
+{Pn }∞
+n=0 form an orthogonal basis over [−1, 1] (when equipped with the Lebesgue measure),
+where Pn is of degree n. The first five are displayed in Figure 7. As intended, they share
+many similarities when compared with the empirical bases in Figure 5.
+
+Figure 7. First five Legendre polynomials: P0 (x) = 1, P1 (x) = x, P2 (x) = 12 (3x2 − 1), P3 (x) =
+1
+(5x3 − 3x), P4 (x) = 81 (35x4 − 30x2 + 3).
+2
+
+Figure 8 displays the subspace distance (16) for K = 3, 4, 5, 6, 7 over the rolling window
+start date t. The Legendre coefficients were determined as in Equation (14) using Simpson’s
+rule. The top panel shows d(Ut , U0 ), the amount by which the basis has drifted since the
+initial eigenbasis was obtained at t = 0, and the bottom panel shows d(Ut , UL ), comparing
+the empirical eigenbasis against the fixed Legendre basis.
+For a reference benchmark, recall from Section A that 0 ≤ d ≤ K < M − K, and the
+expected distance between two random K-dimensional subspaces is K(1 − K/M ), or 2.955,
+3.920, 4.876, 5.821, 6.756 for K = 3, 4, 5, 6, 7 respectively.
+
+Figure 8. Distance between subspaces. Ut refers to the eigenmode basis performing PCA over
+times {t, t + 1, . . . , t + T − 1}, and UL refers to the Legendre basis. x-axis values are equally spaced,
+corresponding to the rolling window start time. K refers to the dimension of the basis used.
+
+Looking at the figure in order of datasets, ARB5 generally indicates high stability. All K
+exhibit relatively small d(Ut , U0 ) throughout. Notably, K = 4 is more stable than K = 3
+relative to inception, suggesting information from higher modes is retained even far into the
+
+22
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+future. A possible breakpoint appears in higher dimensions around Jan 2024, with a jump
+for K = 5 that later propagates to K = 6 and K = 7. Alignment with the Legendre basis
+is tight, as d(Ut , UL ) remains low across time and K, similar in magnitude to d(Ut , U0 ) for
+later t. The fourth-dimensional subspaces are consistently of low distance, and even up to
+the seventh dimension appear quite stable.
+ETH5 is qualitatively similar, but is generally noisier with more fluctuations. Interestingly,
+d(Ut , U0 ) shows transient drift that later reverts, a property hallmark of processes that are
+weakly stationary with slow mean reversion. ETH5 is also generally close to UL , with a
+similar drop in similarity toward middle dates. Interestingly, all three-dimensional subspaces
+for ETH5 are highly close even during periods of higher drift.
+ETH30’s nonstationarity is fully present in Figure 8. The subspace distances increase
+rapidly a few months from inception. Each distance is slowly drifting higher, potentially
+stabilizing to a value close to the random subspace expected distance (e.g. 2.955 for K = 3
+and 6.756 for K = 7).
+Appendix F repeats the rolling subspace distances in Figure 8 considering different rolling
+window sizes (T = 200, 800 compared to T = 400) and approximate subsampling intervals
+(4 and 16 hours compared to 8). The overall takeaways are the same regardless of these
+choices, with an increase in stability when T = 800 is used.
+In summary, the bases for ARB5 and ETH5 are highly stable and comfortably align with
+the fixed Legendre basis up to at least the fourth dimension. This finding is significant
+because it provides a clear, interpretable, and natural starting point for modeling liquidity surfaces, a property that the ETH30 pool does not share. The ability to use a fixed,
+orthogonal basis like the Legendre polynomials simplifies analysis and enables consistent
+interpretation across different time periods. The next section illustrates its use and shows
+that its basis functions offer a natural interpretation of the liquidity surface.
+4.6. Legendre Basis for Liquidity Surface. For ARB5 and ETH5, and each window,
+we fit to the Legendre basis and compare against the raw data. For indexing consistency,
+enumerate k = 1, 2, . . . and write ψk (x) = Pk−1 (x) as the Legendre polynomial of degree
+k − 1. Specifically, this means to consider the rank K reconstruction
+(K)
+
+ŷt
+
+(x) =
+
+K
+X
+
+βt,k ψk (x),
+
+(K)
+
+yt (x) = ŷ (K) (x) + rt
+
+(x),
+
+x ∈ [−1, 1],
+
+(12)
+
+k=1
+(K)
+
+where the βt,k are determined as in Equation (14) using Simpson’s quadrature rule, and rt
+is the remainder. Since non-zero intercepts in the βt,k provide useful insight, no demeaning is
+performed prior to the fit. Figure 9 shows the Legendre fit for ARB5 and ETH5, separately
+fitted over datasets and windows for the first cross-section in each window (analogous to the
+cross-sections in Figure 2). This is done for K = 5 (blue curve) and K = 50 (green), with
+the observed yt (xm ) overlayed (grey points).
+The K = 50 reconstruction cleanly interpolates except in cases of large jumps or potential
+outlier spikes (particularly evident in the ETH5 case), providing a low bias but high variance
+fit. With K = 5, it is a smoother, low-variance fit. Visually, it is highly accurate for ARB5
+and captures ETH5’s coarse shape. Note that neither is objectively better; larger K lowers
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+23
+
+Figure 9. Cross-sections comparing Legendre reconstructions using K = 5 versus K = 50 over all
+windows and ARB5 and ETH5. Each cross-section uses the first t in that window.
+
+approximation error but risks fitting noise; K = M interpolates in-sample, a typical biasvariance tradeoff. The remainder of the text focuses on the first five components (k =
+1, . . . , 5) since (1) orthogonality means taking K > 5 does not change their interpretation
+or coefficients, (2) empirically, K = 5 explains ≈ 90–95% of variance across windows under
+the PCA eigenbasis, and the Legendre basis is closely aligned.
+4.6.1. Factor Specifics and Effects of Shocks. In contrast with PCA eigenfunctions, the Legendre basis yields a fixed collection of functions across time. One may interpret the kth
+basis function in the following way:
+• ψ1 (x) = 1 (level): A positive shock raises liquidity uniformly over prices, representing
+liquidity being added everywhere.
+• ψ2 (x) = x (slope/tilt). Increases liquidity toward x = −1 while decreasing toward
+x = +1 (or vice versa), matching the empirical “slope effect.”
+• ψ3 (x) = 12 (3x2 − 1) (curvature): A positive shock would lift the edges toward x = ±1
+and depress at the current price x = 0, the same as “flattening" the liquidity surface,
+which has concentration at zero. A shock in the opposite direction enforces a bell
+shape.
+• ψ4 (x) = 21 (5x3 − 3x) (inhomogeneous tilt). This has the same tilt effect as ψ2 (x) at
+√
+x = 0 and ±1, but a reversed effect toward the two inflection points x = ±1/ 5 ≈
+±0.4472.
+A positive shock leaves x = 0 untouched,
+increases liquidity near x =
+√
+√
+−1/ 5, 1, and decreases liquidity near x = 1/ 5, −1.
+
+24
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+Increasing the corresponding
+• ψ5 (x) = 18 (35x4 − 30x2 + 3) (mid-level repositioning).
+q
+weight shifts liquidity symmetrically on x ≈ ± 3/7 toward the middle and edges.
+Effectively, liquidity near (but not at) the middle would shift to either the far edges
+or toward x = 0.
+The interpretations become unwieldy as K increases. Note that the lower order pieces hold
+interpretation even if K > 5 by orthogonality of the ψk (x).
+To better understand these interpretations, Figure 10 works with ETH5 and reveals the
+effect of a positive “shock” to each factor, displaying the first cross-section in each window
+(mirroring the Figure 2). Specifically, βt,k is replaced with βt,k +sd(βt,k ) in the reconstruction
+Equation (12). This is done separately for each k to observe its individual effect on the curve.
+The sample standard deviation is used for simplicity to illustrate the effect of a “typical”
+shock. The figure shows the observed yt0 (xm ) (grey points) as well as the Legendre projected
+(5)
+versions ŷt (x) (blue curve) and its shocked version (red curve). The ARB5 version is Figure
+18 in Appendix D, showing the same patterns.
+
+Figure 10. ETH5: effect onto the full cross-section yt (x) of a 1 standard deviation shock on the
+kth component, k = 1, . . . , 5, where t is the beginning of the window considered.
+
+The observations match the bulleted discussion above, as expected. Notably, a shock of
+k = 1 increases the liquidity curve uniformly, k = 2 tilts it, and k = 3 distributes mass away
+from the current price at x = 0. The higher order effects are less obvious (likely because
+of a smaller standard deviation), although a close inspection reveals k = 4 providing the
+inhomogeneous tilt. This is especially apparent in Window 2 where
+x = 0 is left untouched,
+√
+x < 0 shows a decrease at x = −1 and increase at x = −1/ 5, and the reverse holds for
+x > 0. Forqk = 5, liquidity increases at both the far tails and center, redistributing mass
+near x = ± 3/7 (local minima of ψ5 (x)).
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+25
+
+4.6.2. Legendre Time Series. We briefly repeat the time series analysis as done in Section
+4.4.
+Window 1 (2023–2024)
+
+Window 2 (2024)
+
+Window 3 (2024)
+
+Figure 11. Legendre Fit: Time series (left) and autocorrelation functions of Legendre coefficients
+βt,k (right, blue) for ARB5. ACF2 (orange) refers to the autocorrelation of the squared AR(1)
+residuals ê2t . The gray bar indicates the 95% pointwise cutoff for significance from zero autocorrelation. Each ACF equals 1 at lag 0.
+
+Window 1 (2023–2024)
+
+Window 2 (2024)
+
+Window 3 (2024)
+
+Figure 12. Legendre Fit: Time series (left) and autocorrelation functions of Legendre coefficients
+βt,k (right, blue) for ETH5. ACF2 (orange) refers to the autocorrelation of the squared AR(1)
+residuals ê2t . The gray bar indicates the 95% pointwise cutoff for significance from zero autocorrelation. Each ACF equals 1 at lag 0.
+
+Many of the takeaways in these figures coincide with conclusions from the PCA discussion.
+We list some notable remarks:
+• The same spikes in midsummer 2024 are present in Window 3, for both ARB5 and
+ETH5.
+
+26
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+Window 1
+
+k
+1
+2
+3
+4
+5
+
+ADF p
+
+βt ,k
+
+0.030
+0.009
+0.075
+0.000
+0.000
+
+42.044
+0.094
+-1.125
+-0.028
+0.327
+
+Window 2
+
+Window 3
+
+τ
+
+ADF p
+
+βt ,k
+
+sd(βt,k )
+
+τ
+
+ADF p
+
+βt ,k
+
+0.346 11.437
+0.948
+7.387
+0.308
+6.678
+0.347
+3.890
+0.210
+2.390
+
+0.225
+0.054
+0.001
+0.000
+0.000
+
+42.235
+0.039
+-0.793
+0.049
+0.250
+
+0.311
+0.743
+0.281
+0.231
+0.183
+
+4.555
+8.399
+7.831
+2.034
+2.908
+
+0.022
+0.002
+0.000
+0.000
+0.000
+
+42.651
+0.249
+-0.522
+0.036
+0.145
+
+sd(βt,k )
+
+sd(βt,k )
+
+τ
+
+0.315 9.051
+0.544 11.378
+0.185 2.350
+0.174 3.115
+0.125 1.603
+
+Table 4. Legendre Fit: Summary statistics for Legendre coefficients of ARB5 for each window. τ
+is mean return time −1/ log |ϕ| from AR(1).
+
+Window 1
+
+k
+1
+2
+3
+4
+5
+
+ADF p
+
+βt ,k
+
+0.652
+0.069
+0.031
+0.000
+0.000
+
+44.128
+0.235
+-0.499
+0.042
+0.135
+
+Window 2
+τ
+
+ADF p
+
+βt ,k
+
+0.349
+9.569
+0.634 11.443
+0.274 10.886
+0.210
+5.029
+0.176
+2.609
+
+0.118
+0.033
+0.000
+0.001
+0.000
+
+43.278
+0.026
+-0.722
+0.001
+0.214
+
+sd(βt,k )
+
+Window 3
+τ
+
+ADF p
+
+βt ,k
+
+0.372 16.322
+0.804 17.784
+0.402 9.717
+0.343 4.205
+0.261 3.012
+
+0.023
+0.184
+0.000
+0.000
+0.000
+
+43.362
+-0.013
+-0.257
+0.031
+0.146
+
+sd(βt,k )
+
+sd(βt,k )
+
+τ
+
+0.397 23.758
+0.607 14.919
+0.350 6.550
+0.260 3.125
+0.230 2.357
+
+Table 5. Legendre fit: Summary statistics for Legendre coefficients time series of ETH5 for each
+window. τ is mean return time −1/ log |ϕ| from AR(1).
+
+• The time series and ACFs carry many of the same properties as the PCA version. A
+particular example is k = 3, ETH5, Window 1, where the PCA and Legendre scores
+are nearly indistinguishable.
+• Heteroskedasticity is the biggest thing that seems to be adjusted, sometimes amplified
+or shifted across k (see e.g. ARB5 Window 3)
+The tables remove the proportion of variance explained, which are not directly applicable
+to a fixed basis expansion, and add βt ,k , the average over that period.
+• The first coefficient is an intercept. The sample mean βt 1 is large and dominates the
+other βt ,k , appropriate as it represents the level effect of liquidity.
+• The average βt ,3 for the curve effect is uniformly negative across windows and datasets
+and large relative to its standard deviation. This makes sense because increasing the
+curve effect flattens it out. A negative baseline is needed to obtain the bell curve
+shape.
+• Conversely, the average mid-level repositioning βt ,5 is uniformly positive. This counteracts the pure “quadratic” shape from the negative βt ,2 , creating a tail effect akin
+to a bell curve. It also has the fastest mean reversion time (approximately 1 day,
+sometimes faster for ARB5), suggesting a transient effect.
+• The slope effects (k = 2, 4) always have large sd(βt,k ) relative to their averages. This
+suggests an insignificant average slope effect, i.e. the liquidity surface can drift from
+asymmetry but will revert toward it. The mean reversion time for k = 2 is quite high
+with τ ≈ 7.5–18. In contrast, the cubic k = 4 has τ ≈ 2–5.
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+27
+
+• Mean reversion times decrease rapidly as k increases, particularly for k = 4 and 5.
+• We still observe 0–1 unit roots across the first five coefficient series within each
+window/dataset. The ones with ADF p > 0.1 are the level effect (k = 1), common
+across ARB5 Window 2, and ETH5 Windows 1 and 2, and the slope effect (k = 2)
+for ETH5 Window 3. These look like a random walk/unit root (slow decay). For
+Window 3, it looks like a regime shift by the ACF (quick decay then level off at a
+nonzero value), and the switch in the time series.
+Detailed Time Series Analysis. We repeat the investigation of the time series as in Section
+4.4.3 for the Legendre time series. Rather than looking for broad patterns across all datasets
+and windows, the focus is shifted toward each basis function as they carry a fixed meaning
+in this context.
+Figure 13 shows a heatmap comparing all 3 · 2 · 5 = 30 series across all 4 · 6 = 24
+combinations of volatility and distributions. In aggregate, the patterns are very similar to the
+PCA case, favoring a GARCH effect with heavy tails. The t or skew-t distribution are always
+preferred to the normal or platykurtic GED, and the choices still include EGARCH(1,0,1)-t
+(12/30 = 40%), TARCH(1,1,1)-skew t (6/30 = 20%), with GARCH(1,1)-t the third most
+preferred now (4/30 = 13.3%). Interestingly, there are now two cases for an ARCH(1)-t, but
+both have a ∆BIC < 1 compared to the EGARCH(1,0,1)-t. With fixed factor interpretations
+across windows, it is important to point out some specific observations:
+(1) For β1,t , the coefficients associated with the level effect P0 (x) = 1, there is unanimous
+preference for the asymmetric TARCH(1,1,1) or EGARCH(1,1,1) over EGARCH(1,0,1)
+(with 5/6 preferring skew-t and the other a symmetric-t). All of these have ∆BIC > 6
+compared to the best EGARCH(1,0,1) in that row, aside from ARB5 Window 1
+(∆BIC = 5.1). Thus, the level effect exhibits high asymmetry, both in the volatility
+(state dependent) and innovations (instantaneous shocks).
+(2) EGARCH(1,0,1) or GARCH(1,1) is always preferred for β4,t and β5,t over asymmetric
+EGARCH(1,1,1) or TARCH(1,1,1). The skew-t wins for ARB5, and t for ETH5.
+Thus, these high-order effects prefer symmetric volatilities, with potential skew in
+the innovations.
+(3) β2,t and β3,t are split across all choices mentioned above.
+We repeat the mean analysis, using EGARCH(1,0,1) volatility with t-distributed noise. A
+detailed BIC heatmap is in Figure 19 in Appendix D. The takeaways are similar to those
+of the PCA discussion, with a general preference toward AR(1) with a couple of exceptions.
+This time, the first two factors (k = 1, 2) are consistently AR(1) (10/12 give lowest BIC,
+and the other two have ∆BIC = 1.8, 4.7). The higher-order factors are more mixed, but
+still with a strong preference toward AR(1). AR(3) was never preferred.
+
+5. Discussion and Conclusion
+This research explored the application of dynamic factor models and functional principal
+component analysis (FPCA) to model and analyze liquidity profiles in Uniswap v3. Our
+findings demonstrate the potential of these methodologies to effectively capture the complex
+dynamics in liquidity distributions across price ranges. By treating liquidity profiles as
+
+28
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+Figure 13. Legendre Coefficients: Heatmap of BIC scores according to heteroskedasticity and
+distribution assumptions. Reported is the ∆ BIC relative to the lowest (best) for that series. All
+use an AR(1) mean. Any value of “–" had ∆BIC > 10.
+
+functional data, we can leverage tools for dimensionality reduction and forecasting that
+maintain the structure of the original data.
+Our empirical analysis highlights a persistent low-rank factor representation within the
+Uniswap v3 liquidity surfaces of the 5 bps pools. For all datasets and time periods considered,
+the factor time series coefficients exhibited autoregressive (AR) dynamics, clear generalized
+autoregressive conditional heteroskedasticity (GARCH) effects, and heavy tails. This was
+consistent for both the empirical (PCA) bases and a Legendre basis. A statistical verification
+using the Bayesian Information Criterion (BIC) overwhelmingly favored GARCH variants
+over constant volatility models, confirming a preliminary observational analysis. The models
+also consistently preferred heavy-tailed innovation distributions, such as the Student’s tdistribution, over the normal distribution, suggesting that liquidity surfaces are prone to
+occasional extreme shocks. Additionally, there appears to be approximately one unit root
+present in the collection of factor time series for the 5 bps pools, a commonality in other
+functional time series in finance, such as yield curves. In summary, heavy tails, conditional
+heteroskedasticity, and AR(1)-style mean-reversion are unequivocal features of (log)-liquidity
+surfaces.
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+29
+
+A key finding is the stability of the empirical PCA basis for the 5 bps pools (Ethereum
+ETH-USDC and Arbitrum ARB-USDC). This low-rank structure is highly stable across
+rolling time windows and also aligns consistently with a low-order Legendre polynomial basis.
+This alignment is a critical discovery, as it provides a fixed, interpretable set of factors, akin
+to the level, slope, and curvature factors found in the Nelson-Siegel model for yield curves,
+which can be used for consistent analysis and modeling. This finding suggests that the
+fundamental "shape" of liquidity surfaces for these pools can be parsimoniously represented
+by a collection of orthogonal factors with persistent distributional properties. This sets the
+stage for accurate forecasting, uncertainty quantification, and analysis of economic shocks.
+In contrast, the Ethereum 30 bps ETH-USDC pool revealed a highly nonstationary structure with significant temporal irregularities. Its PCA basis drifted substantially over time,
+requiring a higher number of principal components to explain the same proportion of variance observed in the 5 bps pools. This stark difference suggests that the higher 30 bps fee
+tier may attract liquidity providers with different patterns, resulting in a less stable and less
+consistent liquidity surface.
+5.1. Stylized Facts of Uniswap v3 Liquidity Surfaces. The Legendre factor model can
+be used to empirically verify the stylized facts in the seminal work [FMCM+ 21, FMCA+ 22].
+The statistical analysis of the log-liquidity surface confirms several stylized facts from existing
+literature and reveals new ones.
+5.1.1. Verification of Known Stylized Facts.
+• We confirm the claim that “we typically observe Lt (x) to be relatively large near
+x = 0.” The average coefficients βt k for the asymmetric terms (k = 2, 4) in Tables 4
+and 5 are both effectively zero across all time windows, meaning asymmetry averages
+out over time. We also uniformly observe that βt 3 < 0 (significantly so) and βt 5 > 0,
+both of which contribute to a larger liquidity mass around x = 0.
+• We provide empirical evidence for the stylized fact that “The shape of the liquidity
+surface can vary significantly depending on LP risk preferences and chosen price interval configurations.” and that “Market volatility significantly influences LP behavior”.
+Our findings show that in high-volatility regimes, LPs tend to widen their liquidity
+ranges, shifting liquidity mass outwards and lowering the central peak. Conversely,
+in low-volatility periods, liquidity is characterized by a tighter, steeper concentration around the mid-price. According to our model, this phenomenon is captured
+by the "flattening effect" or ψ3 (x) with coefficients βt,3 . A higher average βt,3 value
+corresponds to a flatter liquidity surface, providing clear evidence for risk-averse LP
+behavior.
+5.1.2. New Stylized Facts. Our statistical analysis reveals a succinct set of new facts about
+the liquidity surface dynamics.
+• Low-Rank Structure: Dynamic factor analysis shows that 3 to 7 orthogonal components are sufficient to explain 90% to 95% or more of the variation in the logliquidity surface. This percentage occasionally drops to 80% during periods of high
+volatility.
+
+30
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+• Persistent Time Series: The time series associated with these factors exhibit
+AR(1)-like behavior when stationary. There is overwhelming evidence of GARCH(1,1)
+volatility and heavy-tailed innovations, and these facts hold consistently across the
+pools studied.
+• Basis Alignment: For the 5 bps pools (ARB-USDC and ETH-USDC), the empirical
+PCA bases strongly align with the basis of Legendre polynomials. This consistency
+across time windows allows for the use of a parsimonious, fixed-factor model. The
+distributional facts mentioned above also hold for the Legendre coefficient series.
+• Nonstationarity: Approximately one unit root is present in the collection of coefficient time series for the 5 bps pools, as found in both the PCA and Legendre
+bases. However, for the 30 bps ETH-USDC pool, the coefficient series are highly
+nonstationary, and there is no consistent basis, indicating a more complex and less
+stable liquidity structure.
+5.2. Future Work. Our findings present several compelling avenues for future research,
+building upon the foundational framework we have established. An immediate next step is
+to examine whether the trends observed in the ETH-USDC 5bps and 30bps pools hold for
+other token pairs. While a full analysis of every possible pair is beyond the scope of this
+study, it would be valuable to empirically verify if less dominant pools are, in general, more
+nonstationary and less stable. We hypothesize that this is the case because the lower volume
+may attract liquidity providers who deploy more static or passive positions. This makes
+the liquidity dynamics more susceptible to price movements, which are themselves highly
+nonstationary.
+From a similar perspective, it is worth investigating if the basis stability, particularly the
+alignment with the Legendre basis, holds for a wider array of dominant pools, such as those
+involving memecoins, stablecoin-stablecoin pairs, or the BTC-ETH pair. We anticipate that
+the stylized facts established in this study will remain consistent for high-volume pairs. More
+generally, extending the analysis to various token pairs and blockchain networks beyond
+Ethereum and Arbitrum would provide valuable insights into the generalizability of our
+findings and the potential impact of network-specific factors on liquidity dynamics.
+From a modelling perspective, our work can be extended by exploring alternative orthogonal polynomial bases over [−1, 1], such as the weighted Jacobi polynomials. These
+polynomials are orthonormal according to the weighted measure w(x) = (1 − x)α (1 + x)β ,
+where α, β > −1. The standard Legendre basis is a special case where α = β = 0. This
+offers additional flexibility, as the weights can be chosen to emphasize different parts of the
+liquidity curve. For example, setting α = β > 0 places more weight toward the center of
+the curve, while α ̸= β introduces an asymmetry, favoring one side of the price more than
+another. The optimal choice of basis ultimately depends on the practitioner’s specific needs
+and the economic interpretation desired.
+Moreover, the Jacobi polynomials are orthogonal eigenfunctions for the Jacobi differential
+operator:
+d2
+d
+L = (1 − x2 ) 2 + (β − α − {α + β + 2)x}
+dx
+dx
+associated with the eigenvalues λn = −n(n + α + β + 1) for n being nonnegative integers.
+It is thus tempting to use a parametric dynamical model for the evolution of the (log)
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+31
+
+liquidity profile in the form of a stochastic partial differential equation (SPDE) driven by a
+finite-dimensional Brownian motion
+dyt (x) = {Lyt (x) − V (t, x)yt (x) + ht (x)} dt +
+
+R
+X
+
+σtm (x)dWtr
+
+for x ∈ [−1, 1],
+
+r=1
+
+where the differential operator L depicts the local diffusion-convection behavior of the liquidity profile yt , V ≥ 0 corresponds to the percentage cancellation rate of liquidity at site x,
+and h ≥ 0 captures the incoming flow rate of liquidity at x, and R is the number of Brownian
+drivers. The Jacobi polynomials, being the eigenfunctions for the Jacobi operator L, help
+decompose the above SPDE into an infinite-dimensional system of SDEs in eigenmodes. As
+in the empirical analysis done in Section 4.6 using the Legendre bases and the fact that the
+eigenvalues λn diverge to negative infinity as n → ∞, one would expect that the SDEs with
+the first few (approximately 5 to 7) eigenmodes will dominantly capture the dynamics of
+the (log) liquidity profile. The SPDE with the Jacobi differential operator thus provides a
+succinct and financially intuitive, easy-to-interpret model for the liquidity surface. We leave
+the details of this line of research for a future follow-up study.
+Forecasting is a natural and crucial extension of this work, especially with the use of a fixed,
+interpretable basis. We propose a suitable forecasting recipe using a vector autoregression
+(VAR) model with a multivariate GARCH process. Consider the factor coefficient vector
+βt = [βt,1 , . . . , βt,K ]⊤ . An appropriate model is
+βt+1 = a + Aβt + ϵt+1 ,
+
+ϵt+1 |Ft ∼ tν (0, Ht+1 ),
+
+(13)
+
+Here, a is an intercept vector, A contains the autoregression parameters, and Ht follows a
+multivariate GARCH specification. This approach provides a full distributional forecast of
+the liquidity surface. This model would allow for:
+• Full simulation of future paths for computing loss quantiles and conditional variance.
+• Simulation of economic shocks by adjusting the current state or model parameters.
+• Fast computation of look-ahead error metrics suitable for rolling forecast error calculations.
+In this forecasting framework, the number of factors K would need to be determined beforehand, either by selecting a fixed, conservative number (e.g., K = 5) or based on a specific
+reconstruction metric. A thorough forecasting study using this methodology would be a
+valuable contribution to the field.
+Acknowledgements
+S. N. T. is grateful for the financial support from the National Science and Technology
+Council of Taiwan under grant 114-2115-M-007-012-MY3, "Mathematical Foundation of Automated Market Makers."
+References
+[AC20]
+
+Guillermo Angeris and Tarun Chitra. Improved price oracles: Constant function market makers. In Proceedings of the 2nd ACM Conference on Advances in Financial Technologies, AFT
+’20, pages 80–91, 2020.
+
+32
+
+[ACDF25]
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+Carol Alexander, Xi Chen, Jun Deng, and Qi Fu. Price discovery and efficiency in uniswap
+liquidity pools. Journal of Futures Markets, 2025.
+[AHPP20]
+Marco Avellaneda, Brian Healy, Andrew Papanicolaou, and George Papanicolaou. Pca for
+implied volatility surfaces. arXiv preprint arXiv:2002.00085, 2020.
+[AZR20]
+Hayden Adams, Noah Zinsmeister, and Dan Robinson. Uniswap v2 core. https://uniswap.
+org/whitepaper-v2.pdf, 2020. Accessed: July 17, 2025.
+[AZS+ 21]
+Hayden Adams, Noah Zinsmeister, Moody Salem, River Keefer, and Dan Robinson. Uniswap
+v3 core, 2021. Accessed: July 17, 2025.
+[BBDG18] Jean-Philippe Bouchaud, Julius Bonart, Jonathan Donier, and Martin Gould. Trades, Quotes
+and Prices: Financial Markets Under the Microscope. Cambridge University Press, 2018.
+[BCN24]
+Erhan Bayraktar, Asaf Cohen, and April Nellis. Dex specs: A mean field approach to defi
+currency exchanges. arXiv preprint arXiv:2404.09090, 2024.
+[CDM24]
+Álvaro Cartea, Fayçal Drissi, and Marcello Monga. Decentralized finance and automated market making: Predictable loss and optimal liquidity provision. SIAM Journal on Financial
+Mathematics, 15(3):931–959, 2024.
+[CDR11]
+Jens H. E. Christensen, Francis X. Diebold, and Glenn D. Rudebusch. The affine arbitrage-free
+class of nelson–siegel term structure models. Journal of Econometrics, 164(1):4–20, 2011.
+[CF02]
+Rama Cont and José Da Fonseca. Dynamics of implied volatility surfaces. Quantitative Finance,
+2(1):45, 2002.
+[CJ21]
+Agostino Capponi and Ruizhe Jia. The adoption of blockchain-based decentralized exchanges.
+arXiv preprint arXiv:2103.08842, 2021.
+[CM21]
+Rama Cont and Marvin S. Müller. A stochastic partial differential equation model for limit
+order book dynamics. SIAM Journal on Financial Mathematics, 12(2):744–787, 2021.
+[Con01]
+Rama Cont. Empirical properties of asset returns: stylized facts and statistical issues. Quantitative Finance, 1(2):223, 2001.
+[CST10]
+Rama Cont, Sasha Stoikov, and Rishi Talreja. A stochastic model for order book dynamics.
+Operations Research, 58(3):549–563, 2010.
+[DL06]
+Francis X. Diebold and Canlin Li. Forecasting the term structure of government bond yields.
+Journal of Econometrics, 130(2):337–364, 2006.
+[DLY08]
+Francis X. Diebold, Canlin Li, and Vivian Z. Yue. Global yield curve dynamics and interactions:
+a dynamic nelson–siegel approach. Journal of Econometrics, 146(2):351–363, 2008.
+[FMCA+ 22] Zhou Fan, Francisco J. Marmolejo-Cossío, Ben Altschuler, He Sun, Xintong Wang, and David
+Parkes. Differential liquidity provision in uniswap v3 and implications for contract design. In
+Proceedings of the Third ACM International Conference on AI in Finance, pages 9–17, 2022.
+[FMCM+ 21] Zhou Fan, Francisco Marmolejo-Cossio, Daniel J. Moroz, Michael Neuder, Rithvik Rao, and
+David C. Parkes. Strategic liquidity provision in uniswap v3. arXiv preprint arXiv:2106.12033,
+2021.
+[GM23]
+Emmanuel Gobet and Anastasia Melachrinos. Decentralized finance & blockchain technology.
+In SIAM Financial Mathematics and Engineering 2023, Jun 2023.
+[GPW+ 13] Martin D. Gould, Mason A. Porter, Stacy Williams, Mark McDonald, Daniel J. Fenn, and
+Sam D. Howison. Limit order books. Quantitative Finance, 13(11):1709–1742, 2013.
+[HKH15]
+Siegfried Hörmann, Łukasz Kidziński, and Marc Hallin. Dynamic functional principal components. Journal of the Royal Statistical Society Series B: Statistical Methodology, 77(2):319–348,
+2015.
+[HL24]
+Hugo Hissinaga and Márcio Laurini. Interest rate forecasting with principal component analysis
+based on long-run covariance matrix. Annals of Financial Economics, 19(02):2450005, 2024.
+[HLR15]
+Weibing Huang, Charles-Albert Lehalle, and Mathieu Rosenbaum. Simulating and analyzing
+order book data: The queue-reactive model. Journal of the American Statistical Association,
+110(509):107–122, 2015.
+[HRS+ 21]
+C. R. Harvey, A. Ramachandran, J. Santoro, F. Ehrsam, and V. Buterin. DeFi and the Future
+of Finance. Wiley, 2021.
+[HSH12]
+Spencer Hays, Haipeng Shen, and Jianhua Z. Huang. Functional dynamic factor models with
+application to yield curve forecasting. The Annals of Applied Statistics, 6(3):870–894, 2012.
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+[HSW22]
+
+[KGC+ 18]
+
+[KM23]
+[KR95]
+[LHRW21]
+[Lit91]
+[MC23]
+[MC24]
+[Mec19]
+[MMR23]
+
+[NS87]
+[Opr22]
+
+[RS05]
+[She09]
+[She21]
+[SW11]
+[TW24]
+[ZCY23]
+[ZLW+ 24]
+
+33
+
+Lioba Heimbach, Eric Schertenleib, and Roger Wattenhofer. Risks and returns of uniswap
+v3 liquidity providers. In Proceedings of the 4th ACM Conference on Advances in Financial
+Technologies, pages 89–101, 2022.
+Harry Kalodner, Steven Goldfeder, Xiaoqi Chen, S Matthew Weinberg, and Edward W Felten.
+Arbitrum: Scalable, private smart contracts. In 27th USENIX Security Symposium (USENIX
+Security 18), pages 1353–1370, 2018.
+Elie Kapengut and Bruce Mizrach. An event study of the ethereum transition to proof-of-stake.
+Commodities, 2(2):96–110, 2023.
+Robert E Kass and Adrian E Raftery. Bayes factors. Journal of the american statistical association, 90(430):773–795, 1995.
+Stefan Loesch, Nate Hindman, Mark B Richardson, and Nicholas Welch. Impermanent loss in
+uniswap v3. arXiv preprint arXiv:2111.09192, 2021.
+Robert Litterman. Common factors affecting bond returns. Journal of Fixed Income, pages
+54–61, 1991.
+Deborah Miori and Mihai Cucuringu. Defi: Modeling and forecasting trading volume on
+uniswap v3 liquidity pools. Available at SSRN 4445351, 2023.
+Deborah Miori and Mihai Cucuringu. Clustering uniswap v3 traders from their activity on
+multiple liquidity pools, via novel graph embeddings. Digital Finance, 6(1):113–143, 2024.
+Elizabeth S Meckes. The random matrix theory of the classical compact groups, volume 218.
+Cambridge University Press, 2019.
+Jason Milionis, Ciamac C. Moallemi, and Tim Roughgarden. Complexity-approximation tradeoffs in exchange mechanisms: Amms vs. lobs. In Financial Cryptography and Data Security:
+27th International Conference, FC 2023, Bol, Brač, Croatia, May 1–5, 2023, Revised Selected
+Papers, Part I, pages 326–343. Springer-Verlag, 2023.
+Charles R. Nelson and Andrew F. Siegel. Parsimonious modeling of yield curves. Journal of
+Business, pages 473–489, 1987.
+Andreea Oprea. The use of principal component analysis (pca) in building yield curve scenarios
+and identifying relative-value trading opportunities on the romanian government bond market.
+Journal of Risk and Financial Management, 15(6):247, 2022.
+James O Ramsay and Bernard W Silverman. Functional data analysis. Springer, 2005.
+Haipeng Shen. On modeling and forecasting time series of smooth curves. Technometrics,
+51(3):227–238, 2009.
+Kevin Sheppard. bashtage/arch: Release 4.18 (Version v4.18). Zenodo, March 2021.
+James H Stock and Mark W Watson. Dynamic factor models. 2011.
+Shen-Ning Tung and Tai-Ho Wang. A mathematical framework for modelling clmm dynamics
+in continuous time. arXiv preprint arXiv:2412.18580, 2024.
+Haochen Zhang, Xi Chen, and Lin F Yang. Adaptive liquidity provision in uniswap v3 with
+deep reinforcement learning. arXiv preprint arXiv:2309.10129, 2023.
+Brian Z Zhu, Dingyue Liu, Xin Wan, Gordon Liao, Ciamac C Moallemi, and Brad Bachu.
+What drives liquidity on decentralized exchanges? evidence from the uniswap protocol. arXiv
+preprint arXiv:2410.19107, 2024.
+
+Appendix A. Basis Discussion
+Values at x ∈
+/ {x1 , . . . , xM } are not allowable in (6) without regularity: infinitely many L2
+functions interpolate the grid exactly but differ for x ∈ (xm−1 , xm ). Thus, off-grid evaluation
+requires some smoothness or structure on uk (or on yt ) and a numerical scheme.
+One approach is to choose an orthogonal basis {ψk }k≥1 of L2 ([−1, 1]), for example LeR1
+gendre, Fourier, or wavelets. The optimal L2 projection coefficients are β̃t,k = −1
+yt (x)ψk (x)dx.
+Since this is intractable, as no off-grid evaluations are allowed, one typically approximates
+β̃t,k ≈ βt,k via a quadrature rule to determine weights (wm )M
+m=1 , e.g. trapezoidal or Simpson’s
+
+34
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+rule (both work in the equally spaced case). In particular,
+βt,k =
+
+M
+X
+
+wm yt (xm )ψk (xm )
+
+(14)
+
+βt = (Ψ⊤ W Ψ)−1 Ψ⊤ W yt ,
+
+(15)
+
+m=1
+
+or for a fixed K in vector form
+
+where Ψ is M × K with m, k entry ψk (xm ), and W = diag(w1 , . . . , wM ). This can be
+connected with the general FPCA approach, which assumes yt ∈ L2 ([−1, 1]) is stationary
+with mean m and covariance kernel C : [−1, 1]2 → R, with C symmetric, positive definite,
+square-integrable, and continuous. Analogous to PCA, Mercer’s Theorem yields C(x, x′ ) =
+P∞
+′
+{ϕk }. The Karhunen-Loève expansion subsequently
+k=1 λk ϕk (x)ϕk (x ) with orthonormal
+P
+η
+ϕ
+(x),
+which is the L2 -optimal basis when truncated to
+provides yt (x) = m(x) + ∞
+k=1 t,k k
+K terms. With equally spaced grids {xm }M
+m=1 , the eigenpairs of the sample covariance Σ̂
+converge (in operator norm) to those of the covariance operator as M, T → ∞ (relative to
+the quadrature rule).
+In summary, a fixed basis {ψk }k≥1 ⊂ L2 ([−1, 1]) allows full evaluation of (6) at off-grid
+points. Although this is suboptimal compared to the Mercer basis, it still provides a consistent reconstruction in the limit, assuming sufficient regularity. Additionally, if the two bases
+align closely, one has the added benefit of a fixed interpretation if the ψk (x) provide it.
+Comparing Subspace Alignment. In practice, a data-dependent basis is not fixed over time
+due to sampling or estimation error, or nonstationarity. One may also want to use an
+alternative data-dependent basis, such as diagonalizing the long-run covariance (found to
+perform well in forecasting tasks [HL24], but suboptimal for low-rank representation of yt (x)
+in (4)), or a fixed basis {ψk }k≥1 for a consistent interpretation, like Nelson-Siegel for yield
+curves, but still want it to be “close” to the empirical bases. Thus, it is useful to have a
+method to compare across bases.
+Note that in any K-rank reconstruction (6), all K × K orthogonal rotations of factors
+yield the same reconstruction. Thus, when two bases reconstruct the same y, it means they
+span the same subspace. The degree to which these subspaces do not align can be compared
+through projection distance. Specifically, let U1 , U2 ∈ RM ×K be two rank-K matrices with
+orthogonal columns, each representing a particular basis, for example UK from the PCA
+decomposition above, or Ψ from the fixed orthonormal basis. A standard metric to compare
+subspaces is the projection distance:
+1
+dS (U1 , U2 ) = ∥P1 − P2 ∥2F ,
+2
+
+Pj = Uj Uj⊤ ∈ RM ×M ,
+
+(16)
+
+where ∥ · ∥2F is the Frobenius norm. It follows that 0 ≤ dS (U1 , U2 ) ≤ min(K, M − K). The
+subspaces are the same if and only if dS = 0.
+Thus, subspace drift across windows W1 and W2 can be measured by comparing dS (UW1 , UW2 ).
+As mentioned, one can also assess alignment with a fixed Φ. For example, if dS (UW , Φ) is generally small over all windows W, then the basis Φ is relatively stable for the data-generating
+process.
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+35
+
+One benchmark stricter than the maximal distance min(K, M − K) is one according to
+a random subspace: if U ∈ RM ×K corresponds to a random K-rank projection (HaarK
+) (see Section 3.3 in Meckes
+distributed random matrix), then E[dS (Uj , U )] = K(1 − M
+(2019) [Mec19]). Values below this indicate more meaningful alignment than compared to a
+random subspace.
+Appendix B. Liquidity Surface Details and Rank-Standardized Coordinates
+To set notation, denote the raw liquidity surface as {Lt (i)}t≥0,i∈sZ , where Lt (i) is the
+raw step function corresponding to liquidity at time t and tick i. Let s be the pool’s tickspacing (e.g. s = 10 for the 0.05% tier) and ĩt the current price tick at time t. To simplify the
+modelling approach, we rank-standardize ticks, focusing on locations where liquidity changes
+across ticks.
+Define the jump (event) ticks
+Et := {i ∈ sZ : Lt (i) ̸= Lt (i − s)},
+i.e., the boundary ticks of the piecewise-constant Lt (flat interiors excluded). Order jumps
+around ĩt using a rank index r ∈ Z:
+(−2)
+
+· · · < it
+
+(−1)
+
+< it
+
+(0)
+
+(1)
+
+(2)
+
+< it := ĩt < it < it < · · · ,
+
+(r)
+
+where, for r > 0 (resp. r < 0), it is the |r|-th jump strictly to the right (resp. left) of ĩt .
+Fix an odd M ≥ 3 and let j ∗ := (M + 1)/2. We retain the anchor and the (M − 1)/2
+(j−j ∗ )
+and the
+nearest jumps on each side. For j = 1, . . . , M define the orderings it,j := it
+rank-standardized coordinates
+xj :=
+
+2(j − j ∗ )
+∈ [−1, 1],
+M −1
+
+j = 1, . . . , M.
+
+Note that xj ∗ = 0 corresponds to the current price. By construction, {xj }M
+j=1 is a fixed,
+equally spaced grid. Assume M is small enough that at each t there are at least (M − 1)/2
+jumps on each side of ĩt . The corresponding liquidity surface to be modelled over x ∈ [−1, 1]
+is Lt (xj ) := Lt (it,j ).
+This setup simplifies modelling but has two caveats: (i) to forecast future liquidity in
+absolute ticks, one must jointly model price (as in standard LOB settings), and (ii) it tracks
+jump locations (where the piecewise curve moves). In practice, jumps typically occur at each
+step near the current price, in which case xj is simply an affine transform of the raw tick j.
+Appendix C. Additional Tables and Figures for ETH5 and ETH30 Per
+Window (PCA)
+Figures 14 (ETH5) and 15 (ETH30) and Tables 6 (ETH5) and 7 are displayed here. The
+figures show time series, and ACF and ACF of squared residuals analogous to that of Figure
+6 for ARB5. The tables show various summary statistics, analogous to Table 3 for ARB5.
+A summary of takeaways is in Section 4.4.
+
+36
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+Window 1 (2023)
+
+Window 2 (2023)
+
+Window 3 (2023–2024)
+
+Figure 14. Time series (left) and autocorrelation functions of βt,k (right, blue) for ETH5. ACF2
+(orange) refers to the autocorrelation of the squared AR(1) residuals ê2t . The gray bar indicates
+the 95% pointwise cutoff for significance from zero autocorrelation. Each ACF equals 1 at lag 0.
+
+Window 1
+
+k
+1
+2
+3
+4
+5
+
+Window 2
+
+Window 3
+
+PVEk
+
+ADF p
+
+sd(βt,k )
+
+τ
+
+PVEk
+
+ADF p
+
+sd(βt,k )
+
+τ
+
+PVEk
+
+ADF p
+
+sd(βt,k )
+
+τ
+
+0.708
+0.125
+0.050
+0.021
+0.015
+
+0.333
+0.064
+0.023
+0.000
+0.000
+
+6.676
+2.808
+1.778
+1.163
+0.982
+
+8.360
+20.500
+10.718
+2.560
+1.912
+
+0.563
+0.247
+0.066
+0.032
+0.012
+
+0.262
+0.003
+0.000
+0.000
+0.000
+
+7.157
+4.743
+2.457
+1.709
+1.049
+
+22.285
+14.349
+5.627
+3.256
+1.428
+
+0.474
+0.342
+0.073
+0.027
+0.015
+
+0.012
+0.193
+0.024
+0.000
+0.000
+
+5.762
+4.892
+2.264
+1.367
+1.019
+
+27.096
+12.638
+6.540
+1.973
+1.658
+
+Table 6. Summary statistics for principal component time series of ETH5 for each window. τ is
+mean reversion time −1/ log |ϕ| from AR(1) fit.
+
+Window 1
+
+k
+1
+2
+3
+4
+5
+
+Window 2
+
+Window 3
+
+PVEk
+
+ADF p
+
+sd(βt,k )
+
+τ
+
+PVEk
+
+ADF p
+
+sd(βt,k )
+
+τ
+
+PVEk
+
+ADF p
+
+sd(βt,k )
+
+τ
+
+0.582
+0.166
+0.049
+0.038
+0.030
+
+0.385
+0.431
+0.000
+0.049
+0.000
+
+3.068
+1.636
+0.890
+0.787
+0.702
+
+17.055
+64.624
+9.819
+11.956
+5.480
+
+0.430
+0.150
+0.110
+0.064
+0.040
+
+0.130
+0.259
+0.100
+0.013
+0.000
+
+6.396
+3.783
+3.239
+2.469
+1.948
+
+29.026
+36.975
+20.934
+13.638
+5.334
+
+0.591
+0.120
+0.087
+0.025
+0.020
+
+0.358
+0.001
+0.009
+0.014
+0.000
+
+7.878
+3.553
+3.030
+1.623
+1.461
+
+123.980
+12.187
+15.286
+7.152
+5.360
+
+Table 7. Summary statistics for principal component time series of ETH30 for each window. τ is
+mean reversion time −1/ log |ϕ| from AR(1) fit.
+
+Appendix D. Additional Figures for Legendre Decomposition
+Figure 18 gives the analogous version of 10 for ARB5. The shocks have the same effect
+according to the interpreted basis functions, but are generally less impactful because of lower
+variance.
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+Window 1
+
+Window 2
+
+37
+
+Window 3
+
+Figure 15. Time series (left) and autocorrelation functions of βt,k (right, blue) for ETH30. ACF2
+(orange) refers to the autocorrelation of the squared AR(1) residuals ê2t . The gray bar indicates
+the 95% pointwise cutoff for significance from zero autocorrelation. Each ACF equals 1 at lag 0.
+
+Figure 19 gives a BIC heatmap according to mean choice with an EGARCH(1,0,1) volatility and t-distributed innovations. The takeaways are summarized at the end of Section
+4.6.2.
+Appendix E. Time Series Model Details
+For each series (βt,k )Tt=1 and model M,
+βt,k = µt (Ft−1 ; M)+εt,k ,
+
+εt,k = σt,k (Ft−1 ; M)zt,k ,
+
+iid
+
+zt,k ∼ F (M), Ezt,k = 0, var(zt,k ) = 1.
+
+An AR(1) without intercept satisfies
+µt = ϕβt−1,k .
+Define standardized shocks et,k := εt,k /σt,k .
+E.1. Volatility Models. All constraints below are the usual ones ensuring positivity/stationarity.
+EGARCH does not need positivity constraints because of the log link.
+ARCH(1).
+2
+σt,k
+= ω + αε2t−1,k ,
+ω > 0, α ≥ 0.
+GARCH(1,1).
+2
+2
+σt,k
+= ω+αε2t−1,k +βσt−1,k
+,
+
+ω > 0, α, β ≥ 0, α+β < 1 (sufficient for covariance stationarity).
+
+GJR–GARCH(1,1,1) (variance recursion with threshold).
+2
+2
+σt,k
+= ω + αε2t−1,k + γε2t−1,k 1{εt−1,k < 0} + βσt−1,k
+,
+
+with ω > 0, α ≥ 0, α + γ ≥ 0, β ≥ 0.
+
+38
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+Figure 16. PCA Scores: Heatmap of BIC scores according to heteroskedasticity and distribution
+assumptions. Reported is the ∆ BIC relative to the lowest (best) for that series. All use an AR(1)
+mean. Any value of “–" had ∆BIC > 10.
+
+TARCH(1,1,1) (standard-deviation recursion).
+σt,k = ω + α|εt−1,k | + γ|εt−1,k |1{εt−1,k < 0} + βσt−1,k ,
+with ω > 0, α ≥ 0, α + γ ≥ 0, β ≥ 0.
+EGARCH(1,0,1) (log-variance, symmetric).
+
+
+
+
+2
+2
+log σt,k
+= ω + α |et−1,k | − κ + β log σt−1,k
+,
+
+where κ = E|Z| under the reference Z ∼ F (e.g., κ =
+
+q
+
+2/π for normal).
+
+EGARCH(1,1,1) (log-variance with leverage).
+
+
+
+
+2
+2
+log σt,k
+= ω + α |et−1,k | − κ + γet−1,k + β log σt−1,k
+.
+
+For GARCH(p, q) (and modifications depending on (p, o, q)): increasing p adds additional
+lagged shock terms (squared ε, absolute |ε|, or |e| depending on the model), increasing o
+adds additional asymmetry/threshold lags, and increasing q adds additional volatility lags
+(variance, standard deviation, or log-variance accordingly).
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+Figure 17. PCA Scores: Heatmap of BIC scores according to mean choice. Reported is the ∆ BIC
+relative to the lowest (best) for that series. All use an EGARCH(1,0,1) volatility and t-distributed
+errors. Any value of “–" had ∆BIC > 10.
+
+Innovation distributions. All are standardized to unit variance in estimation:
+• Normal;
+• Student-tν (ν > 2);
+• Skew-t (Hansen) with shape (ν, λ);
+• GED with shape κGED , here restricted to κGED > 2 to allow platykurtic checks.
+
+Appendix F. Alternative Dataset Sizes and Subsampling
+This section motivates some choices used in the paper. In particular, we consider:
+• T = 200 and T = 800,
+• an (approximate) subsampling frequency of 4 hours and 16 hours, and
+• using M = 101, 51, 11 xm ∈ [−1, 1].
+The main text uses T = 400, a subsampling frequency of 8 hours, and M = 201.
+
+39
+
+40
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+Figure 18. ARB5: effect onto the full cross-section yt (x) of a 1 standard deviation shock on the
+kth component, k = 1, . . . , 5, over the three windows considered.
+
+Figure 20 illustrates PVE plots analogous to the bottom panel of Figure 4 for various
+choices of M , with M = 201 repeated for reference. The figure yields two major takeaways
+that hold across all datasets:
+• PVE is generally higher in the lower M case, particularly M = 11.
+• The change in PVE becomes much less discernible, where the M = 101 vs. M = 201
+case is nearly indistinguishable
+This is makes sense theoretically, since in the discrete data regime the PCA tasks can
+be thought of as projecting the M -dimensional subspace onto a K dimensional one. For
+example, M = 11 means to summarize these 11 variables in terms of K linear combinations.
+When the data has some amount of correlation across x’s (as we expect it should), there
+should be little loss of information by truncating to, say, K = 7.
+The second takeaway can be illustrated by example through comparing M = 201 and
+M = 101. In particular, the mild difference between the two is effectively saying that
+the 201 − 101 = 100 prices further away from the center 101 prices are contributing little
+information. Again this is expected since the liquidity curves flatten out and revert to the
+center price. Even during periods of high volatility there is little difference between M = 201
+and M = 101. Thus, M = 201 is sufficient for this task.
+Figure 21 considers various choices of T and subsampling intervals, producing subspace
+distance plots analogous to Figure 8. The overall takeaways are the same as in the main
+body (T = 400, subsample frequency 8 hours), notably: (1) a period of drift that reverts
+for ETH5, (2) ETH30 drifting off, and (3) the Legendre basis producing similar results to
+the PCA basis. There are no clear differences between subsampling frequencies. For sample
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+41
+
+Figure 19. Legendre Coefficients: Heatmap of BIC scores according to mean choice. Reported is
+the ∆ BIC relative to the lowest (best) for that series. All use an EGARCH(1,0,1) volatility and
+t-distributed errors. Any value of “–" has ∆BIC > 10.
+
+sizes, T = 200 is much rougher and T = 800 smoother, appearing to partially subdue some
+of the drift present in ETH30.
+
+Jimmy Risk
+Department of Mathematics and Statistics,
+Cal Poly Pomona
+3801 W Temple Ave, Pomona CA 91768
+Email address: jrisk@cpp.edu
+
+Shen-Ning Tung
+Department of Mathematics,
+National Tsing Hua University
+Hsinchu, Taiwan
+Email address: tung@math.nthu.edu.tw
+
+42
+
+J. RISK, S.-N. TUNG, AND T.-H. WANG
+
+M = 201
+
+M = 101
+
+M = 51
+
+M = 11
+
+Figure 20. Left to right: ARB5, ETH5, ETH30. Proportion of variance explained over various
+choices of M (the number of x’s to use centered around the current price). Analogous to bottom
+panel of Figure 4.
+
+Tai-Ho Wang
+Department of Mathematics
+Baruch College, The City University of New York
+1 Bernard Baruch Way, New York, NY10010
+Email address: tai-ho.wang@baruch.cuny.edu
+
+DYNAMICS OF LIQUIDITY SURFACES IN UNISWAP V3
+
+Figure 21. Subspace distances analogous to Figure 8 over various choices of subsampling frequency
+and rolling window size T .
+
+43
+
+
